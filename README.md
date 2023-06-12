@@ -1,6 +1,6 @@
 # Xtractor
 
-![Xtractor logo](dpcs/images/logo.png)
+![Xtractor logo](docs/images/logo.png)
 
 An open-source tool for extracting information from scanned images of tables
 
