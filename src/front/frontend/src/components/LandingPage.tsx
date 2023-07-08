@@ -7,7 +7,7 @@ const LandingPage = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            navigate('/application');
+            navigate('/xtractor');
         }, 5000);
         
         return () => clearTimeout(timer);
