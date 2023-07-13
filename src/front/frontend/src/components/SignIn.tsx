@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { 
     Button,
     Center, 
     VStack, 
     Image,
     FormControl,
-    FormLabel,
     FormErrorMessage,
-    FormHelperText,
     Flex,
     Box,
     InputGroup,
@@ -22,47 +20,67 @@ import { BiUser, BiLockAlt } from 'react-icons/bi';
 import logo from '../imgs/XtractorLogo.svg';
 
 interface SignInProps {
-    setAuth: (authVal: boolean) => void;
-    isAuth: boolean;
+        setUser: (user: object | null) => void;
+        user: object | null;
+        setIsHuman: (isHuman: boolean) => void;
 }
 
-const SignIn = ({setAuth, isAuth}: SignInProps) => {
+const SignIn = ({user, setUser, setIsHuman}: SignInProps) => {
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (isAuth) {
-            navigate('/xtractor');
-        }
-    })
 
     const [showPassword, hidePassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
 
     const showClick = () => {
         hidePassword(!showPassword);
     }
 
     const emailFormatError = () => {
+
+        const regex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
         if (email === '') {
             setEmailError('Email is required');
             return true;
-        } else if (!email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+        } 
+        if (regex.test(email) === false) {
             setEmailError('Email format is invalid');
+            return true;
         }
         setEmailError('');
         return false;
     }
 
+    const passwordFormatError = () => {
+        if (password === '') {
+            setPasswordError(true);
+            return true;
+        }
+    }
+
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        setAuth(true);
+        const activeEmailError = emailFormatError();
+        const activePasswordError = passwordFormatError();
+        if (activeEmailError || activePasswordError) {
+            return;
+        }
+        setEmailError('');
+        setPasswordError(false);
+        setUser( {id: 1, email: email, password: password})
         navigate('/xtractor');
     }
 
     return (
+
+        <>
+
+        {user ? <Navigate to='/xtractor' replace={true}/> : null}
+
         <Flex 
             flexDirection='column'
             width='100wh'
@@ -73,7 +91,7 @@ const SignIn = ({setAuth, isAuth}: SignInProps) => {
                         <Image
                             src={logo}
                             alt='Xtractor Logo'
-                            boxSize='400px'
+                            boxSize='500px'
                             objectFit='cover'
                             borderRadius='0px'
                         />
@@ -98,6 +116,7 @@ const SignIn = ({setAuth, isAuth}: SignInProps) => {
                                             />
                                         </InputGroup>
                                     </FormControl>
+
                                     <FormControl>
                                         <InputGroup>
                                         <InputLeftElement
@@ -134,6 +153,8 @@ const SignIn = ({setAuth, isAuth}: SignInProps) => {
                     </VStack>
                 </Center>
         </Flex>
+
+        </>
     )
 }
 

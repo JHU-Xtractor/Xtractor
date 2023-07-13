@@ -3,14 +3,18 @@ import { useState } from 'react';
 import './App.css';
 import ApplicationLayout from './components/ApplicationLayout';
 import SignIn from './components/SignIn';
+import ProtectedRoute from './utils/ProtectedRoute';
 
 function App() {
-  const [isAuth, setAuth] = useState(false);
+  const [user, setUser] = useState<null | object>(null)
+  const [isHuman, setIsHuman] = useState<boolean>(false)
   return (
     <BrowserRouter>
       <Routes> 
-        <Route path="/" element={<SignIn setAuth={setAuth} isAuth={isAuth}/>} />
-        <Route path="/xtractor" element={<ApplicationLayout setAuth={setAuth} isAuth={isAuth}/>} />
+        <Route path="/" element={<SignIn setUser={setUser} user={user} setIsHuman={setIsHuman}/>} />
+        <Route element={<ProtectedRoute isAllowed={isHuman ? true : false} redirectPath="/"/>} >
+          <Route path="/xtractor" element={<ApplicationLayout setUser={setUser} user={user}/>} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

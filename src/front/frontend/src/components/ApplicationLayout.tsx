@@ -1,28 +1,23 @@
 import '../App.css';
-import { Button } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Outlet } from 'react-router-dom';
 
 
 interface ApplicationProps {
-    setAuth: (authVal: boolean) => void;
-    isAuth: boolean;
+    setUser: (user: object | null) => void;
+    user: object | null;
 }
 
-const ApplicationLayout = ({setAuth, isAuth}: ApplicationProps) => {
+const ApplicationLayout = ({user, setUser}: ApplicationProps) => {
     const navigate = useNavigate();
 
     const handleSignout = () => {
-        setAuth(false);
+        setUser(null);
     }
 
     return (
-        <div> 
-            <h1> Application Layout </h1>
-            {isAuth ? 
-                <Button onClick={handleSignout} > Sign Out </Button> : 
-                <Button onClick={() => navigate('/')} > Sign In </Button>
-            }
-        </div>
+        //TODO: <Navbar user={user} setUser={user}/>
+        <Outlet />
+        //TODO: <Footer />
     )
 }
 
