@@ -44,12 +44,19 @@ This functionality is completely implemented on AWS.
 
 `https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v1/api_1/{bucketName}/{file_path}`
 
+**Acceptable File Types**
+- JPEG
+- JPG
+- csv
+- PNG
+- PDF
+
 Example:\
 `https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v1/api_1/xtractor-test-bucket/cat.jpg`
 \
 where:\
 `bucketName`:  `xtractor-test-bucket`\
-`file_path`: `sample_uploads/cat.jpg` - note that you cannot upload to a subfolder.
+`file_path`: `cat.jpg` - note that you cannot upload to a subfolder.
 
 Responses:\
 `200` - Success - file has been successfully uploaded\
