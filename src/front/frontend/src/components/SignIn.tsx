@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { 
     Button,
@@ -6,7 +6,6 @@ import {
     VStack, 
     Image,
     FormControl,
-    FormErrorMessage,
     Flex,
     Box,
     InputGroup,
@@ -19,6 +18,7 @@ import { BiUser, BiLockAlt } from 'react-icons/bi';
 
 import logo from '../imgs/XtractorLogo.svg';
 
+
 interface SignInProps {
         setUser: (user: object | null) => void;
         user: object | null;
@@ -28,53 +28,67 @@ interface SignInProps {
 const SignIn = ({user, setUser, setIsHuman}: SignInProps) => {
     const navigate = useNavigate();
 
-    const [showPassword, hidePassword] = useState(false);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [showPassword, hidePassword] = useState(false); //show/hide password state
+    const [email, setEmail] = useState(''); //state to track email input
+    const [password, setPassword] = useState(''); //state to track password input
 
-    const [emailError, setEmailError] = useState('');
-    const [passwordError, setPasswordError] = useState(false);
+    //const [emailError, setEmailError] = useState('');
+    //const [passwordError, setPasswordError] = useState(false);
 
     const showClick = () => {
         hidePassword(!showPassword);
     }
 
-    const emailFormatError = () => {
+    //TODO: Implement working email and password error checking and display of the errors
 
-        const regex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // const emailFormatError = () => {
 
-        if (email === '') {
-            setEmailError('Email is required');
-            return true;
-        } 
-        if (regex.test(email) === false) {
-            setEmailError('Email format is invalid');
-            return true;
-        }
-        setEmailError('');
-        return false;
-    }
+    //     const regex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    const passwordFormatError = () => {
-        if (password === '') {
-            setPasswordError(true);
-            return true;
-        }
-    }
+    //     if (email === '') {
+    //         setEmailError('Email is required');
+    //         return true;
+    //     } 
+    //     if (regex.test(email) === false) {
+    //         setEmailError('Email format is invalid');
+    //         return true;
+    //     }
+    //     setEmailError('');
+    //     return false;
+    // }
 
+    // const passwordFormatError = () => {
+    //     if (password === '') {
+    //         setPasswordError(true);
+    //         return true;
+    //     }
+    // }
+
+    //TODO: Implement auth system with backend
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        const activeEmailError = emailFormatError();
-        const activePasswordError = passwordFormatError();
-        if (activeEmailError || activePasswordError) {
-            return;
-        }
-        setEmailError('');
-        setPasswordError(false);
-        setUser( {id: 1, email: email, password: password})
+        // const activeEmailError = emailFormatError();
+        // const activePasswordError = passwordFormatError();
+        // if (activeEmailError || activePasswordError) {
+        //     return;
+        // }
+        // setEmailError('');
+        // setPasswordError(false);
+
+        setUser( {id: 1, email: email, password: password}) //set the user to be a user with id and specified email and password 
+        setIsHuman(true); 
         navigate('/xtractor');
     }
 
+    const handleNoSignInSubmit = (e: any) => {
+        e.preventDefault();
+        setUser(null);
+        setIsHuman(true);
+        navigate('/xtractor');
+    }
+
+    //TODO: Seperate necessary code to a "Registration" component, part of creating an auth system
+    //TODO: Add recaptcha to sign-in page
     return (
 
         <>
@@ -146,6 +160,16 @@ const SignIn = ({user, setUser, setIsHuman}: SignInProps) => {
                                         onClick={handleSubmit}
                                     >
                                         Login
+                                    </Button>
+
+                                    <Button
+                                        borderRadius={20}
+                                        type="submit"
+                                        variant="solid"
+                                        colorScheme="blue"
+                                        onClick={handleNoSignInSubmit}
+                                    >
+                                        Continue Without Login
                                     </Button>
                                 </VStack>
                             </form>
