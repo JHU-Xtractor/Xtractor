@@ -2,7 +2,7 @@
 FROM public.ecr.aws/lambda/python:latest
 # copy all code and lambda handler
 COPY src ./src
-COPY lambda_handler.py ./
+COPY lambda_function.py ./
 COPY requirements.txt ./
 # install packages
 RUN yum install -y gcc-c++ pkgconfig poppler-cpp-devel
