@@ -3,11 +3,11 @@
 import json
 import boto3
 dynamodb = boto3.resource('dynamodb',
-                          region_name="us-east-1",
-                          endpoint_url="http://localhost:8000")
+                          region_name="us-east-1")
+TABLENAME = 'xtractor_users'
 
-def handler(event,context):
-    dynamoDB = dynamodb.Table('Users')
+def lambda_handler(event,context):
+    dynamoDB = dynamodb.Table(TABLENAME)
     # for the response of the lambda function
     response = "Username Already Exists"
 
@@ -17,8 +17,8 @@ def handler(event,context):
         bodyText = event['body']
         response = putIntoDynamoDB(dynamoDB, bodyText)
 
-        # create folder for s3
-        if response == "User Successfully Inputted into Database":
+        # create folder for s3``
+        if response == "User Successfully Inputted into Database\n":
             response = response + createFolder(json.loads(bodyText)['username'])
             
     # return the lambda processes's response
@@ -66,15 +66,12 @@ def putIntoDynamoDB(dynamoDB, bodyText):
 def createFolder(username):
     try:
         s3 = boto3.client('s3')
-        s3.put_object('./utilities/userFile.txt',Bucket='xtractor-main',Key=(username+'/userFile.txt'))
+        s3.put_object(Bucket='xtractor-main',Body='./utilities/userFile.txt',Key=(username+'/userFile.txt'))
         return "Object Successfully Inserted into S3\n"
     except Exception as e:
         print(e)
     return "Object Not Inserted into S3\n"
 
-
-
 if __name__ == "__main__":
-    file = open("userCreation.json","r")
-    response = handler(None,None)
+    response = createFolder('test')
     print(response)
