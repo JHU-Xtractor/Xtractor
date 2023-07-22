@@ -49,6 +49,8 @@ Please validate all fields prior to sending them to DynamoDB. You do not need to
 
 The POST event should have the message body as a dictionary, not string, e.g. do not encapsulate the dictionary in quotes. The dictionary should be sent as a raw body (see POSTMAN for examples)
 
+The user cannot make a username with spaces or with `",/` or any other characters that may cause confusion. With preference, alphanumeric characters should be used. 
+
 ********200:********
 
 - `Username Already Exists` - signifies that the username attempted to be entered is already in the database and cannot be repeated
