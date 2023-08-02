@@ -25,7 +25,7 @@ const Navbar = ({handleSignOut, user}: any) => {
                 </HStack>
                 <Spacer flex='0.8'/>
                 <HStack spacing='5px'>
-                    {user !== null && <Button color='blue'> Profile </Button>}
+                    {user !== null && <Button color='blue' onClick={()=>navigate('/userProfile')}> Profile </Button>}
                     {user !== null ? <Button color='blue' onClick={handleSignOut}> Sign Out </Button> : <Button color='blue' onClick={() => navigate('/')}> Sign In </Button>}
                 </HStack>
             </Flex>
