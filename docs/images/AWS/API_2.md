@@ -8,7 +8,42 @@ API_2 is the REST API for Xtractor as of 7/21/2023. It contains full implementat
 
 # REST API Gateways
 
-## `usermangement/create_user`
+## `job_management`
+
+### Description
+
+This gateway checks if an existing job ID present within the backend system. This is a `GET` request. 
+
+### Usage
+
+```jsx
+"<JOBIID>"
+
+e.g.
+
+"TEST_ITEM"
+```
+
+A string containing the JOB ID. Utilize the following URL to utilize the API 
+
+[`https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/job_management`](https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/job_management)
+
+### Returns
+
+The response returns both the HTTPS code as well as the message of the response. 
+
+********200:********
+
+- `Job Already Exists` - signifies that the JOB ID already exists within the Database
+- `Job Does not Exist` - signifies the job does not exist within the database.
+- `"<FIELD>"` - signifies that the field is missing.
+
+**400:**
+
+- `"missing authentication token"`  - implies that your request is malformed
+- `"internal server error"` - indicates that either the API gateway or lambda function has malfunctioned, see cloudwatch for debugging information.
+
+## `usermanagement/create_user`
 
 ### **********************Description**********************:
 
