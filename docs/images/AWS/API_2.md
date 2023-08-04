@@ -58,7 +58,7 @@ All are required, `username` serves as key
 | Username  | String | The username of the user, cannot be duplicated |
 | Name  | Map | {’first_name’: <sample>,’lastname’<sample>} |
 | Email | String | email of the user |
-| Security | Map | {’security_question`:<sample>,`security_answer`:<sample>,’password’:pa<sample>} |
+| Security | Map | {security_question:`<sample>`,security_answer:`<sample>`,password:`<sample>`} |
 
 ### **********************************S3 Configuration**********************************
 
