@@ -16,7 +16,7 @@ Uploads a file to the S3 bucket
 
 ### Usage
 
-A `PUT` event utilizing the following API gateway
+A `PUT` event utilizing the following API gateway. Please attach a RAW file in the message request, note that the max size for an API call is 10 MB
 
 `https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/file_managment/{bucket}/{file}`
 
