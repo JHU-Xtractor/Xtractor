@@ -8,6 +8,50 @@ API_2 is the REST API for Xtractor as of 7/21/2023. It contains full implementat
 
 # REST API Gateways
 
+## `/fileManagement/{bucket}/{file}`
+
+### Desccription
+
+Uploads a file to the S3 bucket 
+
+### Usage
+
+A `PUT` event utilizing the following API gateway
+
+`https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/file_managment/{bucket}/{file}`
+
+```jsx
+https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/...
+file_managment/{bucket}/{file}
+
+e.g.
+https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/...
+file_managment/xtractor-main/cat.JPG
+
+//where {bucket} = xtractor-main
+//where {file} - cat.JPG
+```
+
+The bucket for all Xtractor related tasks will be `xtractor-main.`
+
+### Acceptable Files Types
+
+- `JPG`
+- `PNG`
+- `PDF`
+- `JPEG`
+
+********200:********
+
+- No fields returned signifies that the file successfully uploaded
+
+**400:**
+
+- `"missing authentication token"`  - implies that your request is malformed
+- `"internal server error"` - indicates that either the API gateway or lambda function has malfunctioned, see cloudwatch for debugging information.
+
+---
+
 ## `job_management`
 
 ### Description
@@ -43,6 +87,8 @@ The response returns both the HTTPS code as well as the message of the response.
 - `"missing authentication token"`  - implies that your request is malformed
 - `"internal server error"` - indicates that either the API gateway or lambda function has malfunctioned, see cloudwatch for debugging information.
 
+---
+
 ## `usermanagement/create_user`
 
 ### **********************Description**********************:
@@ -58,7 +104,7 @@ All are required, `username` serves as key
 | Username  | String | The username of the user, cannot be duplicated |
 | Name  | Map | {’first_name’: <sample>,’lastname’<sample>} |
 | Email | String | email of the user |
-| Security | Map | {security_question:`<sample>`,security_answer:`<sample>`,password:`<sample>`} |
+| Security | Map | {’security_question`:<sample>,`security_answer`:<sample>,’password’:pa<sample>} |
 
 ### **********************************S3 Configuration**********************************
 
