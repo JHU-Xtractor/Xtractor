@@ -74,7 +74,7 @@ and the message body being:
 
 ```jsx
 {"username":"USERNAME","name":{"first_name": "FIRSTNAME","last_name":"LASTNAME"},\
-"[email":"](mailto:email%22:%22johnsmith@gmail.com)EMAIL","security":{"security_question":"SECURITY QUESTION","security_answer":\
+"email":"EMAIL","security":{"security_question":"SECURITY QUESTION","security_answer":\
 "SECURITY ANSWER","password":"PASSWORD"}}
 ```
 
@@ -83,8 +83,6 @@ and the message body being:
 Please validate all fields prior to sending them to DynamoDB. You do not need to check if a user has already been created with that username, as the database will do so automatically. Moreover, if you fail to include all fields in dictionary above, the response will throw an error exception. 
 
 The POST event should have the message body as a dictionary, not string, e.g. do not encapsulate the dictionary in quotes. The dictionary should be sent as a raw body (see POSTMAN for examples)
-
-The user cannot make a username with spaces or with `",/` or any other characters that may cause confusion. With preference, alphanumeric characters should be used. 
 
 ********200:********
 
