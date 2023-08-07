@@ -7,10 +7,10 @@ from pdf2image import convert_from_path
 
 
 SUBDIRECTORY = "images/"
-FILENAME = "example.pdf"
 BUCKET = "xtractor-main"
 
 s3 = boto3.resource("s3")
+s3Client = boto3.client("s3")
 
 
 def lambda_handler(event, context):
@@ -18,9 +18,12 @@ def lambda_handler(event, context):
 
     # acquire the user and file
     # TODO - implement the user and the file
+    # userName = event["Records"][0]["body"].split(",")[0]
+    # file = event["Records"][0]["body"].split(",")[1]
     userName = event["userName"]
     file = event["file"]
 
+    jobID = file.split(".")[0]
     # check if item exists
     try:
         fileToFind = userName + "/" + file
@@ -33,9 +36,11 @@ def lambda_handler(event, context):
             response = e.what()
             return {"statusCode": 404, "body": response}
 
+    s3Client.download_file("xtractor-main", fileToFind, file)
+
     # Store Pdf with convert_from_path function
-    images = convert_from_path(FILENAME)
-    foldername = SUBDIRECTORY + FILENAME.split(".")[0] + "/"
+    images = convert_from_path(file)
+    foldername = SUBDIRECTORY
 
     # check if the directory for the file exists
     if not os.path.exists(foldername):
@@ -43,17 +48,20 @@ def lambda_handler(event, context):
 
     listOfSigned_URL = {}
 
+    print(len(images))
+
     for i in range(len(images)):
         # Save pages as images in the pdf
-        generatedFile = foldername + "page" + str(i) + ".jpg"
+        fullFileName = jobID + "_page" + str(i) + ".jpg"
+        generatedFile = foldername + fullFileName
         images[i].save(generatedFile, "JPEG")
         # local file, s3 file
         userFile = userName + generatedFile
-        s3.Bucket(BUCKET).upload(generatedFile, userFile)
-        preSignedGenerated = getPresignedURL(userFile)
-        listOfSigned_URL["page" + str(i)] = preSignedGenerated
+        s3Client.upload_file(generatedFile, BUCKET, fullFileName)
+        # preSignedGenerated = getPresignedURL(userFile)
+        # listOfSigned_URL["page" + str(i)] = preSignedGenerated
 
-    return {"statusCode": 200, "body": str(listOfSigned_URL)}
+    # return {"statusCode": 200, "body": str(listOfSigned_URL)}
 
 
 def getPresignedURL(file_name):
@@ -74,5 +82,5 @@ def getPresignedURL(file_name):
 
 
 if __name__ == "__main__":
-    testDictionary = {"userName": "johndoe", "file": "example.pdf"}
-    lambda_handler(None, None)
+    testDictionary = {"userName": "johndoe", "file": "invite.pdf"}
+    lambda_handler(testDictionary, None)
