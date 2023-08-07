@@ -8,7 +8,88 @@ API_2 is the REST API for Xtractor as of 7/21/2023. It contains full implementat
 
 # REST API Gateways
 
-## `usermangement/create_user`
+## `/fileManagement/{bucket}/{file}`
+
+### Desccription
+
+Uploads a file to the S3 bucket 
+
+### Usage
+
+A `PUT` event utilizing the following API gateway. Please attach a RAW file in the message request, note that the max size for an API call is 10 MB
+
+`https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/file_managment/{bucket}/{file}`
+
+```jsx
+https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/...
+file_managment/{bucket}/{file}
+
+e.g.
+https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/...
+file_managment/xtractor-main/cat.JPG
+
+//where {bucket} = xtractor-main
+//where {file} - cat.JPG
+```
+
+The bucket for all Xtractor related tasks will be `xtractor-main.`
+
+### Acceptable Files Types
+
+- `JPG`
+- `PNG`
+- `PDF`
+- `JPEG`
+
+********200:********
+
+- No fields returned signifies that the file successfully uploaded
+
+**400:**
+
+- `"missing authentication token"`  - implies that your request is malformed
+- `"internal server error"` - indicates that either the API gateway or lambda function has malfunctioned, see cloudwatch for debugging information.
+
+---
+
+## `job_management`
+
+### Description
+
+This gateway checks if an existing job ID present within the backend system. This is a `GET` request. 
+
+### Usage
+
+```jsx
+"<JOBIID>"
+
+e.g.
+
+"TEST_ITEM"
+```
+
+A string containing the JOB ID. Utilize the following URL to utilize the API 
+
+[`https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/job_management`](https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/job_management)
+
+### Returns
+
+The response returns both the HTTPS code as well as the message of the response. 
+
+********200:********
+
+- `Job Already Exists` - signifies that the JOB ID already exists within the Database
+- `Job Does not Exist` - signifies the job does not exist within the database.
+- `"<FIELD>"` - signifies that the field is missing.
+
+**400:**
+
+- `"missing authentication token"`  - implies that your request is malformed
+- `"internal server error"` - indicates that either the API gateway or lambda function has malfunctioned, see cloudwatch for debugging information.
+
+---
+
+## `usermanagement/create_user`
 
 ### **********************Description**********************:
 
@@ -39,7 +120,7 @@ and the message body being:
 
 ```jsx
 {"username":"USERNAME","name":{"first_name": "FIRSTNAME","last_name":"LASTNAME"},\
-"[email":"](mailto:email%22:%22johnsmith@gmail.com)EMAIL","security":{"security_question":"SECURITY QUESTION","security_answer":\
+"email":"EMAIL","security":{"security_question":"SECURITY QUESTION","security_answer":\
 "SECURITY ANSWER","password":"PASSWORD"}}
 ```
 
@@ -48,8 +129,6 @@ and the message body being:
 Please validate all fields prior to sending them to DynamoDB. You do not need to check if a user has already been created with that username, as the database will do so automatically. Moreover, if you fail to include all fields in dictionary above, the response will throw an error exception. 
 
 The POST event should have the message body as a dictionary, not string, e.g. do not encapsulate the dictionary in quotes. The dictionary should be sent as a raw body (see POSTMAN for examples)
-
-The user cannot make a username with spaces or with `",/` or any other characters that may cause confusion. With preference, alphanumeric characters should be used. 
 
 ********200:********
 
