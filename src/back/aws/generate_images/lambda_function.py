@@ -1,9 +1,9 @@
 # import module
-import os
 import boto3
 import botocore
 from botocore.exceptions import ClientError
 from pdf2image import convert_from_path
+import json
 
 
 BUCKET = "xtractor-main"
@@ -11,6 +11,8 @@ BUCKET = "xtractor-main"
 s3 = boto3.resource("s3")
 s3Client = boto3.client("s3")
 sqs = boto3.client("sqs")
+sns = boto3.client("sns")
+ARN = "arn:aws:sns:us-east-1:214775916492:xtractor_images_created"
 
 QUEUE_URL = (
     "https://sqs.us-east-1.amazonaws.com/214775916492/xtractor_api2_generateImages"
@@ -61,6 +63,14 @@ def lambda_handler(event, context):
     # lastly delete from queue
     response = sqs.delete_message(QueueURL=QUEUE_URL, ReceiptHandle=receiptHandle)
 
+    # publish successful upload to SNS
+    message = {"jobID": jobID, "userName": userName, "file": file}
+    client = boto3.client('sns')
+    response = client.publish(
+        TargetArn=ARN,
+        Message=json.dumps({'default': json.dumps(message)}),
+        MessageStructure='json'
+    )
 
 # if __name__ == "__main__":
 #     testDictionary = {"userName": "johndoe", "file": "invite.pdf"}
