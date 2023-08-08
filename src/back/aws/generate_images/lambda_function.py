@@ -29,7 +29,7 @@ def lambda_handler(event, context):
     jobID = file.split(".")[0]
     # check if item exists
     try:
-        fileToFind = userName + "/" + file
+        fileToFind = '/tmp/'+userName + "/" + file
         s3.Object(BUCKET, fileToFind).load()
     except botocore.exceptions.ClientError as e:
         if e.response["Error"]["Code"] == "404":
