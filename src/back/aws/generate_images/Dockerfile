@@ -2,7 +2,7 @@
 FROM public.ecr.aws/lambda/python:latest
 # copy all code and lambda handler
 
-
+RUN yum install -y poppler-utils
 #COPY src ./src
 COPY lambda_function.py ./
 COPY requirements.txt ./
