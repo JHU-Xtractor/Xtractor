@@ -18,10 +18,10 @@ def lambda_handler(event, context):
 
     # acquire the user and file
     # TODO - implement the user and the file
-    # userName = event["Records"][0]["body"].split(",")[0]
-    # file = event["Records"][0]["body"].split(",")[1]
-    userName = event["userName"]
-    file = event["file"]
+    userName = event["Records"][0]["body"].split(",")[0]
+    file = event["Records"][0]["body"].split(",")[1]
+    # userName = event["userName"]
+    # file = event["file"]
 
     jobID = file.split(".")[0]
     # check if item exists
@@ -52,16 +52,22 @@ def lambda_handler(event, context):
 
     for i in range(len(images)):
         # Save pages as images in the pdf
-        fullFileName = jobID + "_page" + str(i) + ".jpg"
+        fullFileName = jobID + "page" + str(i) + ".jpg"
         generatedFile = foldername + fullFileName
         images[i].save(generatedFile, "JPEG")
         # local file, s3 file
         userFile = userName + generatedFile
-        s3Client.upload_file(generatedFile, BUCKET, fullFileName)
+        print(userName)
+        print(fullFileName)
+
+        s3Client.upload_file(generatedFile, BUCKET, userName + "/" + fullFileName)
         # preSignedGenerated = getPresignedURL(userFile)
         # listOfSigned_URL["page" + str(i)] = preSignedGenerated
 
     # return {"statusCode": 200, "body": str(listOfSigned_URL)}
+
+    # lastly delete from queue
+    response = s3Client.delete_message(QueueURL="")
 
 
 def getPresignedURL(file_name):
@@ -81,6 +87,6 @@ def getPresignedURL(file_name):
         return {"statusCode": 400, "body": url}
 
 
-if __name__ == "__main__":
-    testDictionary = {"userName": "johndoe", "file": "invite.pdf"}
-    lambda_handler(testDictionary, None)
+# if __name__ == "__main__":
+#     testDictionary = {"userName": "johndoe", "file": "invite.pdf"}
+#     lambda_handler(testDictionary, None)
