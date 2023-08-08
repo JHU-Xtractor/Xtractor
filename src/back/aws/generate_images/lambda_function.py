@@ -12,6 +12,8 @@ BUCKET = "xtractor-main"
 s3 = boto3.resource("s3")
 s3Client = boto3.client("s3")
 
+QUEUE_URL = 'https://sqs.us-east-1.amazonaws.com/214775916492/xtractor_api2_generateImages'
+
 
 def lambda_handler(event, context):
     response = ""
@@ -20,6 +22,7 @@ def lambda_handler(event, context):
     # TODO - implement the user and the file
     userName = event["Records"][0]["body"].split(",")[0]
     file = event["Records"][0]["body"].split(",")[1]
+    receiptHandle = event['Records'][0]['receiptHandle']
     # userName = event["userName"]
     # file = event["file"]
 
@@ -67,7 +70,7 @@ def lambda_handler(event, context):
     # return {"statusCode": 200, "body": str(listOfSigned_URL)}
 
     # lastly delete from queue
-    response = s3Client.delete_message(QueueURL="")
+    response = s3Client.delete_message(QueueURL=QUEUE_URL, ReceiptHandle=receiptHandle)
 
 
 def getPresignedURL(file_name):
