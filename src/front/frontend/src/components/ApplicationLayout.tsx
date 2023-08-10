@@ -7,6 +7,7 @@ import UploadFile, {UploadFileProps} from './UploadFile';
 import Footer from './Footer';
 import PdfViewer from './PdfViewer';
 import { Container, Flex } from '@chakra-ui/react';
+import { Page } from 'react-pdf';
 
 
 interface ApplicationProps {
@@ -18,7 +19,22 @@ const ApplicationLayout = ({user, setUser}: ApplicationProps) => {
 
     const [pagePngs, setPagePngs] = useState<string[]>([]); //state to track page pngs
     const [pdfSource, setPdfSource] = useState<string>("null"); //state to track pdf source
-    const props = {setPdfSource, setPagePngs} as UploadFileProps;
+    const [zoom, setZoom] = useState(0.45);
+
+    const decreaseZoom = () => {
+        if (zoom > 0.3) {
+            setZoom(zoom - 0.05);
+        }
+    }
+
+    const increaseZoom = () => {
+        if (zoom < 1) {
+            setZoom(zoom + 0.05);
+        }
+    }
+
+    const props = {setPdfSource, setPagePngs, decreaseZoom, increaseZoom} as UploadFileProps;
+
 
     const handleSignout = () => {
         setUser(null);
@@ -30,20 +46,23 @@ const ApplicationLayout = ({user, setUser}: ApplicationProps) => {
         <Flex as="header" position="fixed" w="100%" zIndex={15}>
             <Navbar handleSignOut={handleSignout} user={user}/>
         </Flex>
-            <Container as="main" mt="120" zIndex={5} mb="120">
-                <Flex 
-                    flex='1'
-                    align='center'
-                    justifyContent='center'
-                    direction='column'
-                    overflow={'auto'}
-                >
-                    {pagePngs.length === 0 ? <Flex mt={300}> <UploadFile {...props}/> </Flex>: <PdfViewer pagePngs={pagePngs} setPdfPngs={setPagePngs}/>}
-                </Flex>
-            </Container>
-            <Flex as="footer" position="fixed" w="100%" bottom="0" zIndex={15}>
-                <Footer />
-            </Flex>
+                {pagePngs.length === 0 ? 
+                        <Flex
+                            mt={30}
+                            style= {{'width': "100vw"}}
+                            flex='1'
+                            alignItems='center'
+                            justifyContent='center'
+                            direction='column'
+                            overflow={'auto'}> 
+                            <UploadFile {...props}/> 
+                        </Flex>
+                        : 
+                    <PdfViewer pagePngs={pagePngs} setPdfPngs={setPagePngs} zoom={zoom}/>
+                }
+        <Flex as="footer" position="fixed" w="100%" bottom="0" zIndex={15}>
+            <Footer decreaseZoom={decreaseZoom} increaseZoom={increaseZoom} renderZoom={pagePngs.length !== 0}/>
+        </Flex>
         </Flex>
     )
 }
