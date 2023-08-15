@@ -7,7 +7,7 @@ dynamodb = boto3.resource('dynamodb')
 def lambda_handler(event, context):
 
     # setup infrastructure
-    userEntry = user.userEntry(dynamodb)
+    userEntry = user.UserEntry(dynamodb)
 
     # check if user is in database
     if not userEntry.checkIfUserExists(event['username']):
@@ -16,8 +16,15 @@ def lambda_handler(event, context):
             'body': json.dumps('User does not exist')
         }
     
+    #check if username mandatory field is there
+    if "username" not in event:
+        return {
+            'statusCode': 400,
+            'body': json.dumps('Username not provided - Required Field')
+        }
+
     response = ""
-    for modification in userEntry:
+    for modification in event:
         if modification == 'email':
             # modify email value
             if userEntry.updateEmail(event['username'],event['email']) is False:
@@ -40,7 +47,7 @@ def lambda_handler(event, context):
                 response = response + "Password updated\n"
         elif modification == 'security':
             # update security question and answer
-            if userEntry.updateSecurityQuestion(event['username'],event['security']['security_question'],event['security']['security_answer']) is False:
+            if userEntry.updateSecurityQuestion(event['username'],event['security']['security_question']) is False:
                 response = response + "Security update failed\n"
                 return {
                     'statusCode': 400,
@@ -49,7 +56,7 @@ def lambda_handler(event, context):
             else:
                 response = response + "Security updated\n"
 
-            if userEntry.updateSecurityAnswer(event['username'],event['security']['password']) is False:
+            if userEntry.updateSecurityAnswer(event['username'],event['security']['security_answer']) is False:
                 response = response + "Security update failed\n"
                 return {
                     'statusCode': 400,
@@ -63,9 +70,13 @@ def lambda_handler(event, context):
         'body': json.dumps(response)
     }
 
-if __name__ is "__main__":
-    event = {
-        'username': 'test',
-        'email': 'test@edu',
-        'password': 'test'
-    }
+# COMMENT OUT FOR TESTING
+
+# if __name__ is "__main__":
+#     event = {
+#         'username': "USERNAME",
+#         'email': 'test@jhu.edu',
+#         'password': 'test'
+#     }
+#     print(lambda_handler(event, None))
+#     print("Testing updateUserFields")

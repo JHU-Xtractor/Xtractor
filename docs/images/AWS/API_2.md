@@ -16,7 +16,7 @@ Uploads a file to the S3 bucket
 
 ### Usage
 
-A `PUT` event utilizing the following API gateway. Please attach a RAW file in the message request, note that the max size for an API call is 10 MB
+A `PUT` event utilizing the following API gateway
 
 `https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/file_managment/{bucket}/{file}`
 
@@ -140,3 +140,75 @@ The POST event should have the message body as a dictionary, not string, e.g. do
 
 - `"missing authentication token"`  - implies that your request is malformed
 - `"internal server error"` - indicates that either the API gateway or lambda function has malfunctioned, see cloudwatch for debugging information.
+
+---
+
+## `user_management/update_user`
+
+### **********************Description**********************:
+
+The purpose of this function is to modify users in the database. 
+
+### Use Cases:
+
+This is a `POST` operation with the body being a dictionary. The gateway URL can be found below (do not include the `\` character, it only signifies a break in the line):
+
+```jsx
+https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/\
+user_management/update_user
+```
+
+In general, the program will look for the user first to determine if they exists via username. Multiple successes and failures, or a combination of both will be reported if a series of actions are requested, e.g. updating the user’s email and password.
+
+What can and cannot be updated can be found below:
+
+| Parameter | Updateable?  |
+| --- | --- |
+| Email | Yes |
+| Name | No |
+| Password | Yes |
+| Username | No (key) |
+| Security Question & Answer | Yes |
+
+Request formatting can also be found below:
+
+```jsx
+{"username": "USERNAME","email": "test@jhu.edu","password": "test","security":
+{"security_question":"question","security_answer":"answer"}}
+```
+
+Note, not all of the parameters have to be filled out. If the parameter is not filled out, leave out that parameter from the dictionary. 
+
+For instance, if one were only to update email (note the rest of the fields are left out)
+
+```jsx
+{"username": "USERNAME","email": "test@jhu.edu"}
+```
+
+Username is a required field.
+
+**********Update Email:**********
+
+Updates the email for the given user. The user will be requested to re-verify their email and standard checking of whether or not the email is a `.edu` will also be initiated. 
+
+Success 200: `Email updated`
+
+Failure 400: `Email update failed`
+
+**********************Update Password:**********************
+
+Updates the password for a given user. Checks on the characters and security criterion regarding the password is not checked. Must be checked at the front end. 
+
+Success 200: `Password Updated`
+
+Failure 400: `Password Update Failed`
+
+****************Update Security Question and Answer****************
+
+Security question and answer can be updated for the sake of recovering password or other security functions that require an extra layer. 
+
+Success 200: `Security updated`
+
+Failure 400: `Security` `Update Failed`
+
+---

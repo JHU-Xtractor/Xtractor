@@ -26,7 +26,7 @@ class UserEntry:
                 Key={
                     'username': username
                 },
-                UpdateExpression="set fields.email = :e",
+                UpdateExpression="set email = :e",
                 ExpressionAttributeValues={
                     ':e': email
                 },
@@ -37,7 +37,7 @@ class UserEntry:
                 Key={
                     'username': username
                 },
-                UpdateExpression="set fields.email_verified = :e",
+                UpdateExpression="set email_verified = :e",
                 ExpressionAttributeValues={
                     ':e': False
                 },
@@ -56,7 +56,7 @@ class UserEntry:
                 Key={
                     'username': username
                 },
-                UpdateExpression="set fields.password = :p",
+                UpdateExpression="set password = :p",
                 ExpressionAttributeValues={
                     ':p': password
                 },
@@ -75,7 +75,7 @@ class UserEntry:
                 Key={
                     'username': username
                 },
-                UpdateExpression="set fields.security_question = :s",
+                UpdateExpression="set security_question = :s",
                 ExpressionAttributeValues={
                     ':s': security_question
                 },
@@ -94,7 +94,7 @@ class UserEntry:
                 Key={
                     'username': username
                 },
-                UpdateExpression="set fields.security_answer = :s",
+                UpdateExpression="set security_answer = :s",
                 ExpressionAttributeValues={
                     ':s': security_answer
                 },
