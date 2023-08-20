@@ -70,7 +70,7 @@ def lambda_handler(event, context):
         "jobID": jobID,
         "userName": userName,
         "file": file,
-        "num pages": numPages,
+        "num pages": numPages
     }
     response = sns.publish(
         TargetArn=ARN,
