@@ -65,7 +65,13 @@ def lambda_handler(event, context):
     print("SQS")
     print(response)
     # publish successful upload to SNS
-    message = {"jobID": jobID, "userName": userName, "file": file}
+    numPages = range(len(images))
+    message = {
+        "jobID": jobID,
+        "userName": userName,
+        "file": file,
+        "num pages": numPages,
+    }
     response = sns.publish(
         TargetArn=ARN,
         Message=json.dumps({"default": json.dumps(message)}),
