@@ -65,7 +65,7 @@ def lambda_handler(event, context):
     print("SQS")
     print(response)
     # publish successful upload to SNS
-    numPages = range(len(images))
+    numPages = (len(images))
     message = {
         "jobID": jobID,
         "userName": userName,
