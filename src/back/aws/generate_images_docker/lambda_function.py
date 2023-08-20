@@ -61,16 +61,19 @@ def lambda_handler(event, context):
         s3Client.upload_file(generatedFile, BUCKET, userName + "/" + fullFileName)
 
     # lastly delete from queue
-    response = sqs.delete_message(QueueURL=QUEUE_URL, ReceiptHandle=receiptHandle)
-
+    response = sqs.delete_message(QueueUrl=QUEUE_URL, ReceiptHandle=receiptHandle)
+    print("SQS")
+    print(response)
     # publish successful upload to SNS
     message = {"jobID": jobID, "userName": userName, "file": file}
-    client = boto3.client('sns')
-    response = client.publish(
+    response = sns.publish(
         TargetArn=ARN,
-        Message=json.dumps({'default': json.dumps(message)}),
-        MessageStructure='json'
+        Message=json.dumps({"default": json.dumps(message)}),
+        MessageStructure="json",
     )
+    print("SNS")
+    print(response)
+
 
 # if __name__ == "__main__":
 #     testDictionary = {"userName": "johndoe", "file": "invite.pdf"}
