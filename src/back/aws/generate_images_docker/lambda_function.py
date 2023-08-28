@@ -5,9 +5,8 @@ from botocore.exceptions import ClientError
 from pdf2image import convert_from_path
 import json
 
-
+# constants - AWS
 BUCKET = "xtractor-main"
-
 s3 = boto3.resource("s3")
 s3Client = boto3.client("s3")
 sqs = boto3.client("sqs")
@@ -20,6 +19,14 @@ QUEUE_URL = (
 
 
 def lambda_handler(event, context):
+    """
+    This function is triggered by SQS and will generate images from a pdf file 
+    while also uploading them to S3 and publishing a notification to SNS
+    :param: event: dictionary containing userName and file
+    :param: context: lambda context (not used)
+    """
+
+    #response message
     response = ""
 
     # acquire the user and file
@@ -27,13 +34,10 @@ def lambda_handler(event, context):
     file = event["Records"][0]["body"].split(",")[1]
     receiptHandle = event["Records"][0]["receiptHandle"]
 
-    # for testing only (use main at bottom)
-    # userName = event["userName"]
-    # file = event["file"]
-
     # format of the files is jobID+page#.jpg
     jobID = file.split(".")[0]
     # check if item exists
+
     try:
         fileToFind = userName + "/" + file
         s3.Object(BUCKET, fileToFind).load()
@@ -64,6 +68,7 @@ def lambda_handler(event, context):
     response = sqs.delete_message(QueueUrl=QUEUE_URL, ReceiptHandle=receiptHandle)
     print("SQS")
     print(response)
+
     # publish successful upload to SNS
     numPages = (len(images))
     message = {

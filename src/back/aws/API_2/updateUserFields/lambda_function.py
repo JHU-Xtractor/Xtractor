@@ -5,6 +5,11 @@ import userEntry as user
 dynamodb = boto3.resource('dynamodb')
 
 def lambda_handler(event, context):
+    """
+    This function is triggered by API Gateway and will update the user's fields
+    :param: event: dictionary containing username, email, password, and security (not all fields required, only username)
+    :param: context: lambda context (not used)
+    """
 
     # setup infrastructure
     userEntry = user.UserEntry(dynamodb)
@@ -23,6 +28,8 @@ def lambda_handler(event, context):
             'body': json.dumps('Username not provided - Required Field')
         }
 
+    # modify email, password, and security question/answer etc.
+    # note that multiple modifications can occur at once
     response = ""
     for modification in event:
         if modification == 'email':
@@ -65,6 +72,7 @@ def lambda_handler(event, context):
             else:
                 response = response + "Security updated\n"
         
+    # return the response
     return {
         'statusCode': 200,
         'body': json.dumps(response)

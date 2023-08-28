@@ -10,6 +10,11 @@ ses = boto3.client('ses')
 TABLENAME = 'xtractor_users'
 
 def lambda_handler(event,context):
+    """
+    This function is triggered by API Gateway and will create a new user entry in the database
+    :param: event: dictionary containing username, name, email, and security (all fields required)
+    :param: context: lambda context (not used)
+    """
     
     print(event)
     bodyText = (event)
@@ -32,6 +37,11 @@ def lambda_handler(event,context):
     return response
 
 def checkIfUserExists(dynamoDB,username):
+    """
+    This function will check if the user exists in the database
+    :param: dynamoDB: dynamoDB resource
+    :param: username: username to check
+    """
     try:
         # getting the item
         response = dynamoDB.get_item(
@@ -48,6 +58,11 @@ def checkIfUserExists(dynamoDB,username):
 
 
 def putIntoDynamoDB(dynamoDB, bodyText):
+    """
+    This function will put the user into the database
+    :param: dynamoDB: dynamoDB resource
+    :param: bodyText: body of the request (parse through for user fields)
+    """
     try:
         # check if email is a edu account
         if 'edu' not in bodyText['email'] :
@@ -76,6 +91,10 @@ def putIntoDynamoDB(dynamoDB, bodyText):
     return response
     
 def createFolder(username):
+    """
+    This function will create a folder for the user in S3
+    :param: username: username to create folder for in S3 (this is where all the files for that user will be stored)
+    """
     try:
         print("finished")
         s3.put_object(Bucket='xtractor-main',Body='utilities/userFile.txt',Key=(username+'/userFile.txt'))
@@ -86,6 +105,10 @@ def createFolder(username):
         return "Object Not Inserted into S3\n"
 
 def verifyEmail(email):
+    """
+    This function will verify the email of the user
+    :param: email: email to verify
+    """
     try:
         response = ses.verify_email_identity(
             EmailAddress=email
