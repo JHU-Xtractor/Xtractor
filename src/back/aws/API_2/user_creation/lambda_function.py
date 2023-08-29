@@ -72,15 +72,14 @@ def putIntoDynamoDB(dynamoDB, bodyText):
             dynamoDB.put_item(
                 Item={
                     'username': bodyText['username'],
-                    'fields':{
-                        'first_name': bodyText['name']['first_name'],
-                        'last_name': bodyText['name']['last_name'],
-                        'email': bodyText['email'],
-                        'security_question': bodyText['security']['security_question'],
-                        'security_answer': bodyText['security']['security_answer'],
-                        'email_verified': {'BOOL':False},
-                        'password':bodyText['security']['password']
-                        }
+                    'first_name': bodyText['name']['first_name'],
+                    'last_name': bodyText['name']['last_name'],
+                    'email': bodyText['email'],
+                    'security_question': bodyText['security']['security_question'],
+                    'security_answer': bodyText['security']['security_answer'],
+                    'email_verified': {'BOOL':False},
+                    'password':bodyText['security']['password']
+                    
                     }
             )
             verifyEmail(bodyText['email'])

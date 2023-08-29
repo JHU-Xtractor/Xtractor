@@ -4,6 +4,7 @@ import botocore
 from botocore.exceptions import ClientError
 from pdf2image import convert_from_path
 import json
+from datetime import datetime
 
 # constants - AWS
 BUCKET = "xtractor-main"
@@ -11,6 +12,9 @@ s3 = boto3.resource("s3")
 s3Client = boto3.client("s3")
 sqs = boto3.client("sqs")
 sns = boto3.client("sns")
+dynamoDB = boto3.resource("dynamodb")
+JOB_TABLE = "listOfJobs"
+
 ARN = "arn:aws:sns:us-east-1:214775916492:xtractor_images_created"
 
 QUEUE_URL = (
@@ -85,6 +89,22 @@ def lambda_handler(event, context):
     print("SNS")
     print(response)
 
+
+def addToListOfJobs(jobID):
+    """
+    This function will add the job to the list of jobs in the database
+    :param: jobID: jobID to add
+    """
+    response = dynamoDB.Table(JOB_TABLE).put_item(
+        Item={
+            "jobID": jobID,
+            "time": str(datetime.datetime.now())
+        }
+    )
+
+    print(response)
+
+    
 
 # if __name__ == "__main__":
 #     testDictionary = {"userName": "johndoe", "file": "invite.pdf"}
