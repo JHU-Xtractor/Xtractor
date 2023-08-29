@@ -99,7 +99,7 @@ def addToListOfJobs(jobID):
     :param: jobID: jobID to add
     """
     response = dynamoDB.Table(JOB_TABLE).put_item(
-        Item={"jobID": jobID, "time": str(datetime.datetime.now())}
+        Item={"JOB_ID": jobID, "time": str(datetime.now())}
     )
     print("dynamoDb")
     print(response)
