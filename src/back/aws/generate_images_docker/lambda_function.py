@@ -101,7 +101,7 @@ def addToListOfJobs(jobID):
     response = dynamoDB.Table(JOB_TABLE).put_item(
         Item={"jobID": jobID, "time": str(datetime.datetime.now())}
     )
-
+    print("dynamoDb")
     print(response)
 
 
