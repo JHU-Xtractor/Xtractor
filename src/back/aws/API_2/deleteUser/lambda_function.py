@@ -2,12 +2,14 @@ import boto3
 import json
 
 dynamodb = boto3.resource('dynamodb')
+s3 = boto3.client('s3')
+BUCKET = 'xtractor-main'
 table = dynamodb.Table('xtractor_users')
 
 def lambda_handler(event, context):
     """
-    This function is triggered by API Gateway and will update the user's fields
-    :param: event: dictionary containing username, email, password, and security (not all fields required, only username)
+    This function is triggered by API Gateway and will delete the user both in the database and their corresponding s3 files
+    :param: event: dictionary containing username only
     :param: context: lambda context (not used)
     """
     print(event)
@@ -31,6 +33,8 @@ def lambda_handler(event, context):
                 'username': event['username']
             }
         )
+        # remove user contents
+        deleteUserContents(event['username'])
         return {
             'statusCode': 200,
             'body': json.dumps('User deleted')
@@ -55,3 +59,15 @@ def checkIfUserExists(username):
         # in case something goes wrong
         print(e)
     return False
+
+def deleteUserContents(username):
+    """
+    This function will delete all the user's contents from the S3 bucket
+    :param: username: username prefix for all files to delete
+    """
+    
+    response = s3.list_objects_v2(Bucket=BUCKET, Prefix=username)
+
+    for object in response['Contents']:
+        print('Deleting', object['Key'])
+        s3.delete_object(Bucket=BUCKET, Key=object['Key'])
