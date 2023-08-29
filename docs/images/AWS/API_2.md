@@ -212,3 +212,29 @@ Success 200: `Security updated`
 Failure 400: `Security` `Update Failed`
 
 ---
+
+## `user_management/delete_user`
+
+### Description
+
+Deletes a user from the database. They will no longer be able to utilize resources and all their files will also be deleted. 
+
+### Use Case:
+
+```jsx
+
+//example
+{"username":"JohnHawk"}
+```
+
+| Field | Example | Required? |
+| --- | --- | --- |
+| “username” | Any valid user name  | Y |
+
+### Responses
+
+| Response Code | Type | Message Content |
+| --- | --- | --- |
+| 200 | Deletion of User Successful | User Deleted |
+| 400 | User Does not Exist | User does not exist |
+| 400 | Key Error (username not present) | key error |
