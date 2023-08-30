@@ -107,9 +107,8 @@ def addToListOfJobs(jobID,username):
             "time": str(datetime.now()),
             "username": username
         }
-        Item={"JOB_ID": jobID, "time": str(datetime.now())}
     )
-    print("dynamoDb")    print("DynamoDB")
+    print("dynamoDb")   
     print(response)
 
 
