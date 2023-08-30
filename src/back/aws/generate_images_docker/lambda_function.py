@@ -86,11 +86,14 @@ def lambda_handler(event, context):
         Message=json.dumps({"default": json.dumps(message)}),
         MessageStructure="json",
     )
+
+    # add to list of jobs
+    addToListOfJobs(jobID,userName)
     print("SNS")
     print(response)
 
 
-def addToListOfJobs(jobID):
+def addToListOfJobs(jobID,username):
     """
     This function will add the job to the list of jobs in the database
     :param: jobID: jobID to add
@@ -98,10 +101,11 @@ def addToListOfJobs(jobID):
     response = dynamoDB.Table(JOB_TABLE).put_item(
         Item={
             "jobID": jobID,
-            "time": str(datetime.datetime.now())
+            "time": str(datetime.now()),
+            "username": username
         }
     )
-
+    print("DynamoDB")
     print(response)
 
     
