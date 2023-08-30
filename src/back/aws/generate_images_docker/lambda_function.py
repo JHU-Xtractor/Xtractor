@@ -24,13 +24,13 @@ QUEUE_URL = (
 
 def lambda_handler(event, context):
     """
-    This function is triggered by SQS and will generate images from a pdf file 
+    This function is triggered by SQS and will generate images from a pdf file
     while also uploading them to S3 and publishing a notification to SNS
     :param: event: dictionary containing userName and file
     :param: context: lambda context (not used)
     """
 
-    #response message
+    # response message
     response = ""
 
     # acquire the user and file
@@ -74,18 +74,21 @@ def lambda_handler(event, context):
     print(response)
 
     # publish successful upload to SNS
-    numPages = (len(images))
+    numPages = len(images)
     message = {
         "jobID": jobID,
         "userName": userName,
         "file": file,
-        "num pages": numPages
+        "num pages": numPages,
     }
     response = sns.publish(
         TargetArn=ARN,
         Message=json.dumps({"default": json.dumps(message)}),
         MessageStructure="json",
     )
+
+    # add to list of jobs
+    addToListOfJobs(jobID)
 
     # add to list of jobs
     addToListOfJobs(jobID,userName)
@@ -104,11 +107,11 @@ def addToListOfJobs(jobID,username):
             "time": str(datetime.now()),
             "username": username
         }
+        Item={"JOB_ID": jobID, "time": str(datetime.now())}
     )
-    print("DynamoDB")
+    print("dynamoDb")    print("DynamoDB")
     print(response)
 
-    
 
 # if __name__ == "__main__":
 #     testDictionary = {"userName": "johndoe", "file": "invite.pdf"}
