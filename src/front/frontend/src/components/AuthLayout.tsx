@@ -143,9 +143,7 @@ const AuthLayout = ({user, setUser, setIsHuman, signIn}: AuthLayoutProps) => {
     //TODO: Implement auth system with backend
     const handleSubmitLogin = (e: any) => {
         e.preventDefault();
-        const activeEmailError = emailFormatError();
-        const activePasswordError = passwordFormatError();
-        if (activeEmailError || activePasswordError) {
+        if (emailFormatError() || passwordFormatError()) {
             return;
         }
 
@@ -163,11 +161,7 @@ const AuthLayout = ({user, setUser, setIsHuman, signIn}: AuthLayoutProps) => {
 
     const handleSubmitRegister = (e: any) => {
         e.preventDefault();
-        const activeEmailError = emailFormatError();
-        const activePasswordError = passwordFormatError();
-        const activeSecQuestionError = secQuestionFormatError();
-        const activeSecAnswerError = secAnswerFormatError();
-        if (activeEmailError || activePasswordError || activeSecQuestionError || activeSecAnswerError) {
+        if (emailFormatError() || passwordFormatError() || secQuestionFormatError() || secAnswerFormatError()) {
             return;
         }
  
