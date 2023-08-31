@@ -43,8 +43,6 @@ const AuthLayout = ({user, setUser, setIsHuman, signIn}: AuthLayoutProps) => {
         hidePassword(!showPassword);
     }
 
-    //TODO: Implement working email and password error checking and display of the errors
-
     const emailFormatError = () => {
 
         const regex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -187,8 +185,6 @@ const AuthLayout = ({user, setUser, setIsHuman, signIn}: AuthLayoutProps) => {
         navigate('/xtractor');
     }
 
-    //TODO: Seperate necessary code to a "Registration" component, part of creating an auth system
-    //TODO: Add recaptcha to sign-in page
     return (
 
         <>
