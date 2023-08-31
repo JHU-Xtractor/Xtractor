@@ -80,13 +80,6 @@ const SignIn = ({user, setUser, setIsHuman}: SignInProps) => {
         navigate('/xtractor');
     }
 
-    const handleNoSignInSubmit = (e: any) => {
-        e.preventDefault();
-        setUser(null);
-        setIsHuman(true);
-        navigate('/xtractor');
-    }
-
     //TODO: Seperate necessary code to a "Registration" component, part of creating an auth system
     //TODO: Add recaptcha to sign-in page
     return (
@@ -160,16 +153,6 @@ const SignIn = ({user, setUser, setIsHuman}: SignInProps) => {
                                         onClick={handleSubmit}
                                     >
                                         Login
-                                    </Button>
-
-                                    <Button
-                                        borderRadius={20}
-                                        type="submit"
-                                        variant="solid"
-                                        colorScheme="blue"
-                                        onClick={handleNoSignInSubmit}
-                                    >
-                                        Continue Without Login
                                     </Button>
                                 </VStack>
                             </form>

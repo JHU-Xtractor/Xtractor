@@ -12,21 +12,6 @@ interface PdfPageProps {
 
 const PdfPage: React.FC<PdfPageProps> = ({pageNum, src, zoom, onDelete}: PdfPageProps) => {
     return (
-        // <Box borderWidth='2px' borderColor='blue.500' position='relative' width='100vw' height='100vh'  transform={`scale(${zoom})`}>
-        //     <Box width='100vw' height='100vh' transformOrigin='top left' justifyContent={'center'}> 
-        //         <Image src={src} alt='Pdf Page Display'  objectFit= 'cover' justifyContent={'center'}/>
-        //     </Box>
-
-        //     <IconButton 
-        //         icon={<CloseIcon />}
-        //         onClick={onDelete}
-        //         position='absolute'
-        //         top={1}
-        //         left={1}
-        //         colorScheme='red'
-        //         aria-label='Delete Page'
-        //     />
-        // </Box>
         <Box justifyContent='center' alignItems='center' justifyItems='center' borderWidth='5px' borderColor='blue.500' style = {{"width":`${100 * zoom}%`, "height":`${100 * zoom}%`}}>
             <IconButton 
                 icon={<CloseIcon />}

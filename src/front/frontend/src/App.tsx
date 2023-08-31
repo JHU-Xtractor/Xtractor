@@ -13,7 +13,7 @@ function App() {
     <BrowserRouter>
       <Routes> 
         <Route path="/" element={<SignIn setUser={setUser} user={user} setIsHuman={setIsHuman}/>} />
-        <Route element={<ProtectedRoute isAllowed={isHuman ? true : false} redirectPath="/"/>} >
+        <Route element={<ProtectedRoute isAllowed={isHuman && user !== null ? true : false} redirectPath="/"/>} >
           <Route path="/xtractor" element={<ApplicationLayout setUser={setUser} user={user}/>} />
         </Route>
         <Route element={<ProtectedRoute isAllowed={isHuman && user !== null ? true : false} redirectPath="/"/>} >
