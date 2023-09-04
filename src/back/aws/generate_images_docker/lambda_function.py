@@ -88,27 +88,20 @@ def lambda_handler(event, context):
     )
 
     # add to list of jobs
-    addToListOfJobs(jobID)
-
-    # add to list of jobs
-    addToListOfJobs(jobID,userName)
+    addToListOfJobs(jobID, userName)
     print("SNS")
     print(response)
 
 
-def addToListOfJobs(jobID,username):
+def addToListOfJobs(jobID, username):
     """
     This function will add the job to the list of jobs in the database
     :param: jobID: jobID to add
     """
     response = dynamoDB.Table(JOB_TABLE).put_item(
-        Item={
-            "jobID": jobID,
-            "time": str(datetime.now()),
-            "username": username
-        }
+        Item={"JOB_ID": jobID, "time": str(datetime.now()), "username": username}
     )
-    print("dynamoDb")   
+    print("dynamoDb")
     print(response)
 
 
