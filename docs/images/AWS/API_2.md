@@ -6,8 +6,7 @@ Version v2 | 9/16/23 | Authored by Jonathan Young - jyoun127
 
 ### Format
 
-The API is divided by the following\
-Note that the status codes don't match with the actual status codes. That is currently a work in progress
+The API is divided by the following 
 
 **************Name -************** On AWS API Gateway, the API is listed as `xtractor_aws`
 
@@ -114,7 +113,7 @@ This resource relates to all functionalities involving user management.
 
 ### API: `user_management/create_user`
 
-**************************Description:************************** This API call creates a user. NOTE: The username must match the cognito user pool username.
+**************************Description:************************** This API call creates a user. NOTE: the username must match exactly the cognito username
 
 ********************Type: `POST`**
 
@@ -184,11 +183,15 @@ This resource relates to all functionalities involving user management.
 | Field | Descriptor  |
 | --- | --- |
 | username | username to delete |
+| password | password of the user to delete |
 
 **********************************Example Use Case:**********************************
 
 ```jsx
-{"username":"JohnHawk"}
+{
+        'username': 'pualJones2',
+        'password': '72]0Y\'5~T?b]'
+}
 ```
 
 ****************Returns**************** 

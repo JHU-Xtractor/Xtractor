@@ -8,12 +8,12 @@ from random import randint, randrange
 
 s3 = boto3.client('s3')
 ses = boto3.client('ses',region_name="us-east-1")
-
+congito = boto3.client('cognito-idp',region_name="us-east-1")
 
 SOURCE_EMAIL = "jyoun127@jhu.edu" # please change for extractor 
-
 VERIFICATION_TABLE = "xtractor_email_verification_codes"
 TABLENAME = 'xtractor_users'
+USER_POOL_ID = 'us-east-1_NQNnCAiWA'
 
 def lambda_handler(event,context):
     """
@@ -22,22 +22,41 @@ def lambda_handler(event,context):
     :param: context: lambda context (not used)
     """
     
-    print(event)
     bodyText = (event)
 
     dynamoDB = dynamodb.Table(TABLENAME)
     # for the response of the lambda function
     response = "Username Already Exists"
+    try:
+        # check if the table contains that user
+        if not checkIfUserExists(dynamoDB,bodyText['username']):
+            # parse the event for fields
+            response = putIntoDynamoDB(dynamoDB, bodyText)
+        
+        # check if cognito has user
+        congitoResponse = congito.admin_get_user(
+            UserPoolId=USER_POOL_ID,
+            Username=bodyText['username']
+        )
+        print(congitoResponse)
+        if congitoResponse['UserStatus'] == 'CONFIRMED':
+            response = response + "User Already Confirmed"
+        else:
+            return {
+                "statusCode":400,
+                "body": "User Does not exist in cognito"
+            }
+        
+        #create folder for s3
+        if response == "User Successfully Inputted into Database\n":
+            response = response + createFolder(bodyText['username'])
+        
 
-    # check if the table contains that user
-    if not checkIfUserExists(dynamoDB,bodyText['username']):
-        # parse the event for fields
-        response = putIntoDynamoDB(dynamoDB, bodyText)
-
-    #create folder for s3
-    if response == "User Successfully Inputted into Database\n":
-        response = response + createFolder(bodyText['username'])
-            
+    except Exception as e:
+        return {
+            "statusCode":400,
+            "body": str(e)
+        }
     # return the lambda processes's response
     print(response)
     return response
@@ -75,17 +94,13 @@ def putIntoDynamoDB(dynamoDB, bodyText):
             response = "User attempted to put in a non edu account into the database."
         else: 
         # putting the item
-        
             dynamoDB.put_item(
                 Item={
                     'username': bodyText['username'],
                     'first_name': bodyText['name']['first_name'],
                     'last_name': bodyText['name']['last_name'],
                     'email': bodyText['email'],
-                    'security_question': bodyText['security']['security_question'],
-                    'security_answer': bodyText['security']['security_answer'],
-                    'email_verified': False,
-                    'password':bodyText['security']['password']
+
                     
                     }
             )
@@ -157,3 +172,16 @@ def verifyEmail(email):
     except Exception as e:
         print(e)
         return e
+    
+
+#if __name__ == '__main__':
+ #   event = {
+ #       "username": "john_doe11",
+ #       "name": {
+ #           "first_name": "John",
+ #           "last_name": "Youn"
+ #       },
+ #       "email": "jon@jhu.edu"
+ #   }
+
+#    output = lambda_handler(event,None) 
