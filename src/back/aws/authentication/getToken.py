@@ -29,7 +29,7 @@ def authenticate_and_get_token(username: str, password: str,
     return resp
 
 def changePassword(username: str, new_password: str, 
-                               user_pool_id: str, app_client_id: str,auth_response: list):
+                               user_pool_id: str, app_client_id: str,auth_response: list,given_name: str,preferred_username: str) -> None:
         """
         This function will change the password of the user
         :param: username: username to authenticate
@@ -48,8 +48,8 @@ def changePassword(username: str, new_password: str,
         ChallengeName=auth_response['ChallengeName'],
         Session=auth_response['Session'],
         ChallengeResponses={
-            'given_name': 'John Doe',
-            'preferred_username': 'john_doe',
+            'given_name': given_name,
+            'preferred_username': preferred_username,
             'NEW_PASSWORD': new_password,
             'USERNAME': username
         }
@@ -59,16 +59,17 @@ def changePassword(username: str, new_password: str,
         print(f'PASSWORD={new_password}')
 
 if __name__ == '__main__':
-    username = 'john_doe'
-    password = '9hM%+2[O6A=.'
+    username = 'pualJones2'
+    password = 'U3FY37Q1.MrX'
     newPwd = '72]0Y\'5~T?b]'
     user_pool_id = 'us-east-1_NQNnCAiWA'
     app_client_id = '4pp87j9uouhf7jcs98uqgq99nj'
-
+    preferred_username = 'pualJones2'
+    given_name = 'pualJones2'
     # acquire the authentication token - note that for AWS CLI you must have the proper credentials
-    response = authenticate_and_get_token(username,newPwd,user_pool_id,app_client_id) 
-    accessToken = response['AuthenticationResult']['IdToken']
-    print(accessToken)
+    response = authenticate_and_get_token(username,password,user_pool_id,app_client_id) 
+    #accessToken = response['AuthenticationResult']['AccessToken']
+    #print(accessToken)
 
     # in the event that the user needs to change their password prior to using their token
-    #changePassword(username,newPwd,user_pool_id,app_client_id,response)
+    #changePassword(username,newPwd,user_pool_id,app_client_id,response,given_name,preferred_username)

@@ -114,7 +114,7 @@ This resource relates to all functionalities involving user management.
 
 ### API: `user_management/create_user`
 
-**************************Description:************************** This API call creates a user
+**************************Description:************************** This API call creates a user. NOTE: The username must match the cognito user pool username.
 
 ********************Type: `POST`**
 
