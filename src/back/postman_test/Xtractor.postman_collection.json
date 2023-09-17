@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "72f55b62-92a6-421e-8554-dd2865cc4fa8",
+		"name": "Xtractor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26929166"
+	},
+	"item": [
+		{
+			"name": "https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/file_managment/xtractor-main/johndoe_1389.pdf",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJraWQiOiJncWE0ek80bFQ1SEowNkJpQUxEcUd6TmlhbktxR3RFTjVWNzBSZjlWOEhNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIxNDc4NzQ2OC0wMDgxLTcwYjItYWMyOS1lZTYwYjExNjY2ODAiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfTlFObkNBaVdBIiwiY29nbml0bzp1c2VybmFtZSI6ImpvaG5fZG9lIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiam9obl9kb2UiLCJnaXZlbl9uYW1lIjoiSm9obiBEb2UiLCJvcmlnaW5fanRpIjoiMzZlZmVlZmQtY2M1Yy00OGExLTk2MzktZWIyNzFhMTMxYWI5IiwiYXVkIjoiNHBwODdqOXVvdWhmN2pjczk4dXFncTk5bmoiLCJldmVudF9pZCI6ImI0Y2MwNTg4LWFmMGEtNDJhMi04ZTIwLTgwOTAyZmFhNjQ5YiIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjk0OTA4NzgxLCJleHAiOjE2OTQ5MTIzODEsImlhdCI6MTY5NDkwODc4MSwianRpIjoiMWUxOWNiZmQtYWRlZS00MGM5LWEwMzItMjc3MmUxMDIwYjA3IiwiZW1haWwiOiJqb2huX2RvZUBqaHUuZWR1In0.tV2vp9G7SLBcPy1pgC5I8psuEKRl1Gc56bTOjaHkmY6kf5gBfWqdvQDsZ7HOr0aQe-eP65KUwScxRqt9NiqapMMPOYSeATq0sbI203ZXTndQo2VvsLscxz5OuB5FogBPiCBA7mXgLLkQNXTPwMemZ0fe2cX6Mp4nWVIQDDHGU8BcWjSOpl9yBFqKLifCp5FK2fZVFn3sLoDYhoDvJ74RnE7XeZDXIF5xnU4cdNmYhiQ0ruMNxzT9bHtO7_Ch-MIZe8XhZgnoQDWZiBE9i9c3IPyGnsWcGp9q4NfTJYLDxGV5FPgi8WweiWaC87JHRngwYkqsrfaS1cITvgD1doyYNw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": "/C:/Users/jonat/Downloads/johndoe_1389.pdf"
+					}
+				},
+				"url": {
+					"raw": "https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/file_managment/xtractor-main/johndoe_1389.pdf",
+					"protocol": "https",
+					"host": [
+						"7jefwpxjkb",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"v2",
+						"api_2",
+						"file_managment",
+						"xtractor-main",
+						"johndoe_1389.pdf"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User creation",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJraWQiOiJncWE0ek80bFQ1SEowNkJpQUxEcUd6TmlhbktxR3RFTjVWNzBSZjlWOEhNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIxNDc4NzQ2OC0wMDgxLTcwYjItYWMyOS1lZTYwYjExNjY2ODAiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfTlFObkNBaVdBIiwiY29nbml0bzp1c2VybmFtZSI6ImpvaG5fZG9lIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiam9obl9kb2UiLCJnaXZlbl9uYW1lIjoiSm9obiBEb2UiLCJvcmlnaW5fanRpIjoiODJlMTEyNmQtNTVhNi00ZmZjLTlkYjItOTlhNTkxNWM3ZmJkIiwiYXVkIjoiNHBwODdqOXVvdWhmN2pjczk4dXFncTk5bmoiLCJldmVudF9pZCI6ImYzNmY4ZDZiLTNmYTAtNDY1OC05OTE1LWIyNzRmMGIwODc3YSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjk0OTA5MzI0LCJleHAiOjE2OTQ5MTI5MjQsImlhdCI6MTY5NDkwOTMyNCwianRpIjoiYjU2NmYxM2UtODMxYi00M2Q1LWEwOWMtMzRjNjVkZDlhZDE2IiwiZW1haWwiOiJqb2huX2RvZUBqaHUuZWR1In0.ghBNLsPmtKxkhr8NVwyQK0WT9CV3ojxIbBAbbLG2bmDxJYOgqUm6kyoONccoZoyyHZBzTOPTXTmsewSZY6KcEbmXOYpPmEaoGYLY7nJIQO7Gz_zvjwcPoLdpO8q0Jyp1Xrgmxd9VCBjunCBbx-juvPMFEqYKqHAJJ2mWoJYfZBcUSBHu1feA7E1t18ujGHBDv0ZYM0BVPcs2DmumPUj9fdMUzAssn4qwtrVSNSNQbgCy02pT2ZtKmCyHbNDhKB8UNAARaFKbyYp_YpsWgABjDJRKKC_fw8orZf5afdJuJp80Dg6bTQwpm8lg91KYZ9TKW-AzZXlDAEDLI6rD7kK1bQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"kathyli\",\"name\":{\"first_name\": \"Kathy\",\"last_name\":\"Li\"},\"email\":\"kathy@jhu.edu\"}"
+				},
+				"url": {
+					"raw": "https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2//api_2/user_management/create_user",
+					"protocol": "https",
+					"host": [
+						"7jefwpxjkb",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"v2",
+						"",
+						"api_2",
+						"user_management",
+						"create_user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJraWQiOiJncWE0ek80bFQ1SEowNkJpQUxEcUd6TmlhbktxR3RFTjVWNzBSZjlWOEhNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIxNDc4NzQ2OC0wMDgxLTcwYjItYWMyOS1lZTYwYjExNjY2ODAiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfTlFObkNBaVdBIiwiY29nbml0bzp1c2VybmFtZSI6ImpvaG5fZG9lIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiam9obl9kb2UiLCJnaXZlbl9uYW1lIjoiSm9obiBEb2UiLCJvcmlnaW5fanRpIjoiZmRkMTI5MjMtMzM0OS00NTQ1LThhN2UtNmZiODViNjA2ODA1IiwiYXVkIjoiNHBwODdqOXVvdWhmN2pjczk4dXFncTk5bmoiLCJldmVudF9pZCI6IjI5MTlkMmY0LWJhOGUtNGViNy05ZGNjLTZkMmE3NmNmZWI0YSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjk0OTEwNDU3LCJleHAiOjE2OTQ5MTQwNTcsImlhdCI6MTY5NDkxMDQ1NywianRpIjoiMzJhZTM5N2EtZjNhYi00MjFjLWEyNTEtMzNiNzllYjFkY2UzIiwiZW1haWwiOiJqb2huX2RvZUBqaHUuZWR1In0.rkZCdp4gPaLNnfqLkN6_r964xEzk0BnFY1BMZdR5e7YeWi3AXCsfy3WbhSQho8Io3snddJnOGY5z2XcJGyn9rr9kUynromJWRIsgaRueMrMuaW8gh7mFdmO1MHB5j_nIVwQ9YhA5Nj0QrffOOqBvWWFd_WA5gksEMJuD4dqY9Rm36jM9FpPuBmTxLu7ENJ8mcW_UfnzvTdSp_uzveHTNXcjytTpBQws_Ofc_Wl7g2iCi6rfIZd3pDfo1sBzRG86KWgVBg_SC0phC25DJ7JzkOvZkGZb_rxrJ27_jLkb2cZuHh6iChQccVyxsn-KnQLqjKRzEnJh1A2TO0Nn_C8mP_g",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"kathyli\",\"first_name\":\"doctor\",\"last_name\":\"fish\",\"email\": \"fish@fish.edu\"}"
+				},
+				"url": {
+					"raw": "https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/user_management/update_user",
+					"protocol": "https",
+					"host": [
+						"7jefwpxjkb",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"v2",
+						"api_2",
+						"user_management",
+						"update_user"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
