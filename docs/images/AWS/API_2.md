@@ -2,23 +2,58 @@
 
 ---
 
-### Description:
+Version v2 | 9/16/23 | Authored by Jonathan Young - jyoun127
 
-API_2 is the REST API for Xtractor as of 7/21/2023. It contains full implementations for functionalities. There are certain functionalities that have not been implemented, and thus one should consider using API_1 for testing. 
+### Format
 
-# REST API Gateways
+The API is divided by the following\
+Note that the status codes don't match with the actual status codes. That is currently a work in progress
 
-## `/fileManagement/{bucket}/{file}`
+**************Name -************** On AWS API Gateway, the API is listed as `xtractor_aws`
 
-### Desccription
+**Resources** - a collection of API’s that govern a particular use case
 
-Uploads a file to the S3 bucket 
+---
 
-### Usage
+# Authorization
 
-A `PUT` event utilizing the following API gateway
+All API calls **MUST** use an `identity-token` from the cognito user pool: `xtractor_users`
 
-`https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/file_managment/{bucket}/{file}`
+The API call in the `header` section must contain the key `Authorization` alongside the token
+
+# APIs:
+
+## Resource: `file_Management`
+
+This resource relates to all functionalities involving file management. 
+
+### API: `file_Management/{bucket}/{file}`
+
+**************************Description:************************** This API call uploads a file 
+
+********************Type: `PUT`**
+
+**************************Gateway URL:************************** `https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/file_managment/{bucket}/{file}`
+
+************Fields (URL)************
+
+| Field | Descriptor | Required? |
+| --- | --- | --- |
+| bucket | the bucket to upload to 
+
+Note: most operations will upload to xtractor-main | Y |
+| file | the name of the file
+
+Note: do not put special characters. Underscores and dashes are acceptable | Y |
+
+************************Acceptable File Types************************
+
+- `JPG`
+- `PNG`
+- `PDF`
+- `JPEG`
+
+**********************************Example Use Case:**********************************
 
 ```jsx
 https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/...
@@ -32,209 +67,134 @@ file_managment/xtractor-main/cat.JPG
 //where {file} - cat.JPG
 ```
 
-The bucket for all Xtractor related tasks will be `xtractor-main.`
+****************Returns**************** 
 
-### Acceptable Files Types
-
-- `JPG`
-- `PNG`
-- `PDF`
-- `JPEG`
-
-********200:********
-
-- No fields returned signifies that the file successfully uploaded
-
-**400:**
-
-- `"missing authentication token"`  - implies that your request is malformed
-- `"internal server error"` - indicates that either the API gateway or lambda function has malfunctioned, see cloudwatch for debugging information.
-
----
-
-## `job_management`
-
-### Description
-
-This gateway checks if an existing job ID present within the backend system. This is a `GET` request. 
-
-### Usage
-
-```jsx
-"<JOBIID>"
-
-e.g.
-
-"TEST_ITEM"
-```
-
-A string containing the JOB ID. Utilize the following URL to utilize the API 
-
-[`https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/job_management`](https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/job_management)
-
-### Returns
-
-The response returns both the HTTPS code as well as the message of the response. 
-
-********200:********
-
-- `Job Already Exists` - signifies that the JOB ID already exists within the Database
-- `Job Does not Exist` - signifies the job does not exist within the database.
-- `"<FIELD>"` - signifies that the field is missing.
-
-**400:**
-
-- `"missing authentication token"`  - implies that your request is malformed
-- `"internal server error"` - indicates that either the API gateway or lambda function has malfunctioned, see cloudwatch for debugging information.
-
----
-
-## `usermanagement/create_user`
-
-### **********************Description**********************:
-
-This gateway creates a user in the DynamoDB database as well as provisions a folder in S3 for a user to use. 
-
-### ********************************************Entries into Database:********************************************
-
-All are required, `username` serves as key
-
-| Field | Type | Description  |
-| --- | --- | --- |
-| Username  | String | The username of the user, cannot be duplicated |
-| Name  | Map | {’first_name’: <sample>,’lastname’<sample>} |
-| Email | String | email of the user |
-| Security | Map | {’security_question`:<sample>,`security_answer`:<sample>,’password’:pa<sample>} |
-
-### **********************************S3 Configuration**********************************
-
-All files for this user must reside in the `xtractor_main` bucket, which each user being represented as a folder eg `xtractor_main/john_doe` . Within these folders, the files are there for a whole host of uses. 
-
-### **********Usage**********
-
-This is a `POST` event, with the API url being:
-
- [`https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2//api_2/user_management/create_user`](https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2//api_2/user_management/create_user)
-
-and the message body being:
-
-```jsx
-{"username":"USERNAME","name":{"first_name": "FIRSTNAME","last_name":"LASTNAME"},\
-"email":"EMAIL","security":{"security_question":"SECURITY QUESTION","security_answer":\
-"SECURITY ANSWER","password":"PASSWORD"}}
-```
-
-### Responses and Considerations
-
-Please validate all fields prior to sending them to DynamoDB. You do not need to check if a user has already been created with that username, as the database will do so automatically. Moreover, if you fail to include all fields in dictionary above, the response will throw an error exception. 
-
-The POST event should have the message body as a dictionary, not string, e.g. do not encapsulate the dictionary in quotes. The dictionary should be sent as a raw body (see POSTMAN for examples)
-
-********200:********
-
-- `Username Already Exists` - signifies that the username attempted to be entered is already in the database and cannot be repeated
-- `"User Successfully Inputted into Database\nObject Successfully Inserted into S3\n"` - signifies that both the folder and the database has the user inputted
-- `"<FIELD>"` - signifies that the field is missing.
-
-********503:********
-
-- `"missing authentication token"`  - implies that your request is malformed
-- `"internal server error"` - indicates that either the API gateway or lambda function has malfunctioned, see cloudwatch for debugging information.
-
----
-
-## `user_management/update_user`
-
-### **********************Description**********************:
-
-The purpose of this function is to modify users in the database. 
-
-### Use Cases:
-
-This is a `POST` operation with the body being a dictionary. The gateway URL can be found below (do not include the `\` character, it only signifies a break in the line):
-
-```jsx
-https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/\
-user_management/update_user
-```
-
-In general, the program will look for the user first to determine if they exists via username. Multiple successes and failures, or a combination of both will be reported if a series of actions are requested, e.g. updating the user’s email and password.
-
-What can and cannot be updated can be found below:
-
-| Parameter | Updateable?  |
+| Return Code | Description |
 | --- | --- |
-| Email | Yes |
-| Name | No |
-| Password | Yes |
-| Username | No (key) |
-| Security Question & Answer | Yes |
+| 200 | File is successfully uploaded |
+| 401 | Unauthorized |
 
-Request formatting can also be found below:
+## Resource: `job_Management`
+
+This resource relates to all functionalities involving job management. 
+
+### API: `job_management`
+
+**************************Description:************************** This API checks if an existing Job ID is present within the database. Note that all jobs have to be unique across all users. 
+
+************A job is defined as a task to process a file************
+
+********************Type:******************** `GET`
+
+**************************Gateway URL:************************** [`https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/job_management`](https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/job_management)
+
+************Fields (body)************
+
+| Field | Descriptor | Required? |
+| --- | --- | --- |
+| job_id | a string of the job_id to request | Y |
+
+**********************************Example Use Case:**********************************
 
 ```jsx
-{"username": "USERNAME","email": "test@jhu.edu","password": "test","security":
-{"security_question":"question","security_answer":"answer"}}
+{"job_id":"adfadfa"}
 ```
 
-Note, not all of the parameters have to be filled out. If the parameter is not filled out, leave out that parameter from the dictionary. 
+****************Returns**************** 
 
-For instance, if one were only to update email (note the rest of the fields are left out)
+| Return Code | Description |
+| --- | --- |
+| 200 | Job exists or does not exist |
+| 400 | Malformed Input |
+| 401 | Unauthorized |
+
+## Resource: `user_Management`
+
+This resource relates to all functionalities involving user management. 
+
+### API: `user_management/create_user`
+
+**************************Description:************************** This API call creates a user
+
+********************Type: `POST`**
+
+**************************Gateway URL:**************************  [`https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2//api_2/user_management/create_user`](https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2//api_2/user_management/create_user)
+
+************Fields (body)************
+
+| Field | Description  |
+| --- | --- |
+| Username  | The username of the user, cannot be duplicated |
+| Name  | {’first_name’: <sample>,’lastname’<sample>} |
+
+**********************************Example Use Case:**********************************
 
 ```jsx
-{"username": "USERNAME","email": "test@jhu.edu"}
+{"username":"kathyli","name":{"first_name": "Kathy","last_name":"Li"},"email":"kathy@jhu.edu"}
 ```
 
-Username is a required field.
+****************Returns**************** 
 
-**********Update Email:**********
+| Return Code | Description |
+| --- | --- |
+| 200 | User is put in  |
+| 400 | Malformed Syntax |
+| 401 | Unauthorized |
 
-Updates the email for the given user. The user will be requested to re-verify their email and standard checking of whether or not the email is a `.edu` will also be initiated. 
+### API: `user_management/update_user`
 
-Success 200: `Email updated`
+**************************Description:************************** This API updates the fields of a user within the database. 
 
-Failure 400: `Email update failed`
+********************Type: `POST`**
 
-**********************Update Password:**********************
+**************************Gateway URL:************************** https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/user_management/update_user
 
-Updates the password for a given user. Checks on the characters and security criterion regarding the password is not checked. Must be checked at the front end. 
+************Fields (body)************
 
-Success 200: `Password Updated`
+| Field | Descriptor  |
+| --- | --- |
+| Email | Update Email |
+| first_name | Update first name |
+| last_name | update last name |
 
-Failure 400: `Password Update Failed`
-
-****************Update Security Question and Answer****************
-
-Security question and answer can be updated for the sake of recovering password or other security functions that require an extra layer. 
-
-Success 200: `Security updated`
-
-Failure 400: `Security` `Update Failed`
-
----
-
-## `user_management/delete_user`
-
-### Description
-
-Deletes a user from the database. They will no longer be able to utilize resources and all their files will also be deleted. 
-
-### Use Case:
+**********************************Example Use Case:**********************************
 
 ```jsx
+{"username":"kathyli","first_name":"doctor","last_name":"fish","email": "fish@fish.edu"}
+```
 
-//example
+****************Returns**************** 
+
+| Return Code | Description |
+| --- | --- |
+| 200 | User changed (will detail what got changed) |
+| 400 | Malformed Input |
+| 401 | Unauthorized |
+
+### API: `user_management/delete_user`
+
+**************************Description:************************** This API updates the fields of a user within the database. 
+
+********************Type: `DELETE`**
+
+**************************Gateway URL:************************** https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v2/api_2/user_management/delete_user
+
+************Fields (body)************
+
+| Field | Descriptor  |
+| --- | --- |
+| username | username to delete |
+
+**********************************Example Use Case:**********************************
+
+```jsx
 {"username":"JohnHawk"}
 ```
 
-| Field | Example | Required? |
-| --- | --- | --- |
-| “username” | Any valid user name  | Y |
+****************Returns**************** 
 
-### Responses
-
-| Response Code | Type | Message Content |
-| --- | --- | --- |
-| 200 | Deletion of User Successful | User Deleted |
-| 400 | User Does not Exist | User does not exist |
-| 400 | Key Error (username not present) | key error |
+| Return Code | Description |
+| --- | --- |
+| 200 | User deleted |
+| 400 | Or user does not exist/Key error |
+| 401 | Unauthorized |

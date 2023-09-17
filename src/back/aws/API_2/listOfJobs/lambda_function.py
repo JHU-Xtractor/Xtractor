@@ -16,7 +16,8 @@ def lambda_handler(event,context):
     :param: event: dictionary containing jobID
     :param: context: lambda context (not used)
     """
-    
+
+
     #event = json.loads(event['body'])
     dynamoDB = dynamodb.Table(TABLENAME)
 
