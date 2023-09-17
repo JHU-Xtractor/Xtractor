@@ -4,9 +4,15 @@ import json
 import boto3
 dynamodb = boto3.resource('dynamodb',
                           region_name="us-east-1")
-s3 = boto3.client('s3')
-ses = boto3.client('ses')
+from random import randint, randrange
 
+s3 = boto3.client('s3')
+ses = boto3.client('ses',region_name="us-east-1")
+
+
+SOURCE_EMAIL = "jyoun127@jhu.edu" # please change for extractor 
+
+VERIFICATION_TABLE = "xtractor_email_verification_codes"
 TABLENAME = 'xtractor_users'
 
 def lambda_handler(event,context):
@@ -69,6 +75,7 @@ def putIntoDynamoDB(dynamoDB, bodyText):
             response = "User attempted to put in a non edu account into the database."
         else: 
         # putting the item
+        
             dynamoDB.put_item(
                 Item={
                     'username': bodyText['username'],
@@ -77,7 +84,7 @@ def putIntoDynamoDB(dynamoDB, bodyText):
                     'email': bodyText['email'],
                     'security_question': bodyText['security']['security_question'],
                     'security_answer': bodyText['security']['security_answer'],
-                    'email_verified': {'BOOL':False},
+                    'email_verified': False,
                     'password':bodyText['security']['password']
                     
                     }
@@ -108,11 +115,45 @@ def verifyEmail(email):
     This function will verify the email of the user
     :param: email: email to verify
     """
+
+    randomNumber = randint(100000,999999)
+
+    dynamoDBVerification = dynamodb.Table(VERIFICATION_TABLE)
+
+    print("DynamoDB")
+    response = dynamoDBVerification.put_item(
+        Item={
+            'email': email,
+            'verification_code': randomNumber
+        }
+    )
+    print(response)
+
+    print("SES")
+    print("to" +email)
+
     try:
-        response = ses.verify_email_identity(
-            EmailAddress=email
+        response = ses.send_email(
+            Source = SOURCE_EMAIL,
+            Destination={
+                'ToAddresses': [
+                    email,
+                ]
+            },
+            Message={
+                'Subject': {
+                    'Data': 'Xtractor Email Verification',
+                    'Charset': 'UTF-8'
+                },
+                'Body': {
+                    'Text': {
+                        'Data': 'Please verify your email by entering the following code '+str(randomNumber),
+                        'Charset': 'UTF-8'
+                    }
+                }
+            }
         )
-        return response
+        print(response)
     except Exception as e:
         print(e)
         return e

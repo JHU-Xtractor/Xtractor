@@ -64,11 +64,11 @@ class UserEntry:
             print(e)
         return False
 
-    def updatePassword(self,username,password):
+    def updateFirstName(self,username,first_name):
         """
-        This function will update the password of the user
+        This function will update the first name of the user
         :param: username: username to update
-        :param: password: password to update
+        :param: first_name: first name to update
         """
         try:
             # updating the item
@@ -76,9 +76,9 @@ class UserEntry:
                 Key={
                     'username': username
                 },
-                UpdateExpression="set password = :p",
+                UpdateExpression="set first_name = :f",
                 ExpressionAttributeValues={
-                    ':p': password
+                    ':f': first_name
                 },
                 ReturnValues="UPDATED_NEW"
             )
@@ -88,11 +88,11 @@ class UserEntry:
             print(e)
         return False
     
-    def updateSecurityQuestion(self,username,security_question):
+    def updateLastName(self,username,last_name):
         """
-        This function will update the security question of the user
+        This function will update the last name of the user
         :param: username: username to update
-        :param: security_question: security question to update
+        :param: last_name: last name to update
         """
         try:
             # updating the item
@@ -100,33 +100,9 @@ class UserEntry:
                 Key={
                     'username': username
                 },
-                UpdateExpression="set security_question = :s",
+                UpdateExpression="set last_name = :l",
                 ExpressionAttributeValues={
-                    ':s': security_question
-                },
-                ReturnValues="UPDATED_NEW"
-            )
-            return True
-        except Exception as e:
-            # in case something goes wrong
-            print(e)
-        return False
-    
-    def updateSecurityAnswer(self,username,security_answer):
-        """
-        This function will update the security answer of the user
-        :param: username: username to update
-        :param: security_answer: security answer to update
-        """
-        try:
-            # updating the item
-            self.table.update_item(
-                Key={
-                    'username': username
-                },
-                UpdateExpression="set security_answer = :s",
-                ExpressionAttributeValues={
-                    ':s': security_answer
+                    ':l': last_name
                 },
                 ReturnValues="UPDATED_NEW"
             )

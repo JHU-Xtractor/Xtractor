@@ -42,35 +42,34 @@ def lambda_handler(event, context):
                 }
             else:
                 response = response + "Email updated\n"
-        elif modification == 'password':
-            # modify password
-            if userEntry.updatePassword(event['username'],event['password']) is False:
-                response = response + "Password update failed\n"
+        elif modification == 'first_name':
+            # modify first name value
+            if userEntry.updateFirstName(event['username'],event['first_name']) is False:
+                response = response + "First name update failed\n"
                 return {
                     'statusCode': 400,
                     'body': response
                 }
             else:
-                response = response + "Password updated\n"
-        elif modification == 'security':
-            # update security question and answer
-            if userEntry.updateSecurityQuestion(event['username'],event['security']['security_question']) is False:
-                response = response + "Security update failed\n"
-                return {
-                    'statusCode': 400,
-                    'body': response
-                }
-            else:
-                response = response + "Security updated\n"
+                response = response + "first name updated\n"
 
-            if userEntry.updateSecurityAnswer(event['username'],event['security']['security_answer']) is False:
-                response = response + "Security update failed\n"
+        elif modification == 'last_name':
+            # modify last name value
+            if userEntry.updateLastName(event['username'],event['last_name']) is False:
+                response = response + "Last name update failed\n"
                 return {
                     'statusCode': 400,
                     'body': response
                 }
             else:
-                response = response + "Security updated\n"
+                response = response + "last name updated\n"
+        elif modification != 'username':
+            #invalid field to modify
+            response = response + "Invalid field to modify\n"
+            return {
+                'statusCode': 400,
+                'body': response
+            }
         
     # return the response
     return {
