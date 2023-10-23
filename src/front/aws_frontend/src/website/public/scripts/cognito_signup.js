@@ -21,14 +21,16 @@ async function registerUser(username,firstname,lastname,email,password) {
 
     bodyRequest = {
         "username": username,
-        "firstname": firstname,
-        "lastname": lastname,
-        "email": email
+        "name":{
+            "first_name": firstname,
+            "last_name": lastname},
+        "email": email,
+        "password": password
     }
 
     const response = await fetch("https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v1/api_2/user_management/create_user",{
         method: "POST",
-        body: bodyRequest
+        body: JSON.stringify(bodyRequest),
         // headers: {
         //     "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
         //     "Access-Control-Allow-Origin": "http://localhost:3000"
