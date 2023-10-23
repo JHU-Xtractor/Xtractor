@@ -43,7 +43,7 @@ if __name__ == "__main__":
     uploadToS3(open("Sample_Image.JPG", "rb"), BUCKET, "Sample_Image.JPG")
 
     # Start Textract job
-    response = startTextractJob(BUCKET, "Sample_Image.JPG", "sample_table")
+    response = startTextractJob(BUCKET, "Sample_Image.JPG")
     
     # write the textract job
     with open("analyzeDocresponse.json", "w") as f:

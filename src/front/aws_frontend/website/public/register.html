@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+	<meta charset = "UTF-8">
+	<title> My Form </title>
+	<style>
+		#mylink{
+			font-size: 25px;
+		}
+	</style>
+</head>
+<body align='center'>
+        <header>
+		<h1>Register</h1>
+	</header>
+
+	<form action="/register" method="POST" id = "registration">
+		<fieldset>
+			<label>Username</label>
+			<input type ="text" id = 'username' name="username" placeholder="maverick">
+			<br><br>
+
+			<label>Email ID</label>
+			<input type ="email" id = 'email' name="email" placeholder="abc@example.com" >
+			<br><br>
+
+			<label>Password</label>
+			<input type="password" id = "password" name="password" >
+			<br><br>
+
+			<button type ="reset">Reset</button>
+			<button type ="submit">Submit</button>
+		</fieldset>
+	</form>
+	<script src="./scripts/cognito_signup.js"></script>
+	<br><br>
+        <a id="mylink" href="./login.html">login</a>
+    
+</body>
+</html>
