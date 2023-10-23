@@ -7,21 +7,28 @@
 /* eslint-disable */
 import * as React from "react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { Button, CheckboxField, Flex, TextField } from "@aws-amplify/ui-react";
+import {
+  Button,
+  CheckboxField,
+  Flex,
+  Text,
+  TextField,
+  View,
+} from "@aws-amplify/ui-react";
 export default function Login(props) {
   const { overrides, ...rest } = props;
   return (
     <Flex
       gap="19px"
       direction="column"
-      width="823px"
-      height="unset"
+      width="539px"
+      height="318px"
       justifyContent="flex-start"
       alignItems="flex-start"
       position="relative"
       borderRadius="8px"
-      padding="32px 32px 32px 32px"
-      backgroundColor="rgba(250,250,250,1)"
+      padding="11px 32px 8px 32px"
+      backgroundColor="rgba(255,255,255,1)"
       {...getOverrideProps(overrides, "Login")}
       {...rest}
     >
@@ -64,7 +71,7 @@ export default function Login(props) {
       ></CheckboxField>
       <Button
         width="unset"
-        height="unset"
+        height="32px"
         shrink="0"
         alignSelf="stretch"
         size="large"
@@ -73,6 +80,64 @@ export default function Login(props) {
         children="Login"
         {...getOverrideProps(overrides, "Button")}
       ></Button>
+      <View
+        width="479px"
+        height="31px"
+        display="block"
+        gap="unset"
+        alignItems="unset"
+        justifyContent="unset"
+        overflow="hidden"
+        shrink="0"
+        position="relative"
+        padding="0px 0px 0px 0px"
+        {...getOverrideProps(overrides, "Frame 437")}
+      >
+        <Text
+          fontFamily="Inter"
+          fontSize="16px"
+          fontWeight="700"
+          color="rgba(56,85,178,1)"
+          lineHeight="24px"
+          textAlign="left"
+          display="block"
+          direction="column"
+          justifyContent="unset"
+          width="172px"
+          height="29px"
+          gap="unset"
+          alignItems="unset"
+          position="absolute"
+          top="-2px"
+          left="272px"
+          padding="0px 0px 0px 0px"
+          whiteSpace="pre-wrap"
+          children="Sign Up"
+          {...getOverrideProps(overrides, "label3854575")}
+        ></Text>
+        <Text
+          fontFamily="Inter"
+          fontSize="16px"
+          fontWeight="700"
+          color="rgba(48,64,80,1)"
+          lineHeight="24px"
+          textAlign="left"
+          display="block"
+          direction="column"
+          justifyContent="unset"
+          width="172px"
+          height="29px"
+          gap="unset"
+          alignItems="unset"
+          position="absolute"
+          top="-2px"
+          left="100px"
+          padding="0px 0px 0px 0px"
+          whiteSpace="pre-wrap"
+          children="Not A Register User?"
+          {...getOverrideProps(overrides, "label38591747")}
+        ></Text>
+      </View>
     </Flex>
   );
 }

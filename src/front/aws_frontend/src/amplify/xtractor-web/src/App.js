@@ -1,16 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
-import {
-  Login 
- } from './ui-components';
+import {Login } from './ui-components';
+import {Logo} from './ui-components';
+import {NavBarHeader} from './ui-components';
 
 
 function App () {
   return (
-    <div className='container'>
-      <center><Login /></center>
-      
+    <body>
+    <div style={{ position: 'absolute', left: '50%', top: '30%',transform: 'translate(-50%, -50%)'}}>
+      <center>
+        <Logo /> 
+      </center>
     </div>
+    <div style={{ position: 'absolute', left: '50%', top: '60%',transform: 'translate(-50%, -50%)'}}>
+      <center>
+        <Login /> 
+      </center>
+    </div>
+    </body>
   )
 }
 

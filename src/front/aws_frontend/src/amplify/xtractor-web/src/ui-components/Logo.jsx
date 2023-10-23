@@ -46,6 +46,7 @@ export default function Logo(props) {
         position="relative"
         padding="0px 0px 0px 0px"
         objectFit="cover"
+        src="https://xtractor-web.s3.amazonaws.com/xtractor.JPG"
         {...getOverrideProps(overrides, "xtractor 1")}
       ></Image>
     </Flex>
