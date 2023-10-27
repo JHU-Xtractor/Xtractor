@@ -16,7 +16,9 @@
     "aws-amplify": "^5.3.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-grid-gallery": "^1.0.1-alpha.0",
     "react-scripts": "5.0.1",
+    "react-visual-grid": "^0.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

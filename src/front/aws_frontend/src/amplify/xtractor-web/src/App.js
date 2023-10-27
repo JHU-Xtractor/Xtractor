@@ -1,4 +1,5 @@
 import './App.css';
+import ImgDisplay  from './images';
 import {Login } from './ui-components';
 import {Logo} from './ui-components';
 import {NavBarHeader} from './ui-components';
@@ -7,7 +8,7 @@ import {NavBarHeader} from './ui-components';
 function App () {
   return (
     <body>
-    <div style={{ position: 'absolute', left: '50%', top: '30%',transform: 'translate(-50%, -50%)'}}>
+    {/* <div style={{ position: 'absolute', left: '50%', top: '30%',transform: 'translate(-50%, -50%)'}}>
       <center>
         <Logo /> 
       </center>
@@ -17,9 +18,29 @@ function App () {
         <Login /> 
       </center>
     </div>
-    </body>
+    */
+    <div>
+      <center> <ImgDisplay /> </center>
+    </div>
+ } </body> 
+
+
   )
 }
+export default App;
+
+
+// function Upload() {
+//   return (
+//     <div className="App">
+//       <header className="App-header">
+//         <p>
+//           Upload
+//         </p>
+//       </header>
+//     </div>
+//   );
+// }
 
 // function App() {
 //   return (
@@ -42,4 +63,3 @@ function App () {
 //   );
 // }
 
-export default App;
