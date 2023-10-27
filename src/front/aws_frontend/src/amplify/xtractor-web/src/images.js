@@ -52,11 +52,6 @@ class ImageGallery extends Component {
                   value="+"
                   onClick={() => this.expandImage(imageUrl)}
                 />
-                <input
-                  type="button"
-                  value="-"
-                  onClick={() => this.deleteImage(imageUrl)}
-                />
               </div>
             </figure>
           ))}
@@ -84,6 +79,9 @@ function ImgDisplay() {
   const imageUrls = [
     'https://images.trvl-media.com/lodging/56000000/55360000/55359000/55358926/6af3f6de.jpg?impolicy=resizecrop&rw=500&ra=fit',
     'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg',
+    'https://fujifilm-x.com/wp-content/uploads/2021/01/gfx100s_sample_04_thum-1.jpg',
+    'https://fujifilm-x.com/wp-content/uploads/2021/01/gfx100s_sample_04_thum-1.jpg',
+    'https://fujifilm-x.com/wp-content/uploads/2021/01/gfx100s_sample_04_thum-1.jpg',
     'https://fujifilm-x.com/wp-content/uploads/2021/01/gfx100s_sample_04_thum-1.jpg'
     // Add more image URLs here.
   ];
