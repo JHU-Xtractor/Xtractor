@@ -1,53 +1,79 @@
 import React, { Component } from 'react';
+import './index.css';
 
 class ImageGallery extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedImages: new Set(), // Initialize an empty set for selected images
+      selectedImages: new Set(),
+      expandedImage: null, // Initialize expandedImage as null
     };
   }
 
   toggleImageSelection = (imageUrl) => {
     const { selectedImages } = this.state;
     if (selectedImages.has(imageUrl)) {
-      selectedImages.delete(imageUrl); // If already selected, unselect it
+      selectedImages.delete(imageUrl);
     } else {
-      selectedImages.add(imageUrl); // If not selected, select it
+      selectedImages.add(imageUrl);
     }
     this.setState({ selectedImages });
   };
 
   expandImage = (imageUrl) => {
-    
-  }
+    // When plus button is clicked, set expandedImage to the URL
+    this.setState({ expandedImage: imageUrl });
+  };
+
+  closeExpandedImage = () => {
+    // Close the expanded image
+    this.setState({ expandedImage: null });
+  };
 
   render() {
     const { imageUrls } = this.props;
-    const { selectedImages } = this.state;
+    const { selectedImages, expandedImage } = this.state;
 
     return (
       <div>
         <h2>Image Gallery</h2>
-        <div className="image-container">
+        <div className="two-images">
           {imageUrls.map((imageUrl) => (
-            <div key={imageUrl} className="image-item">
+            <figure className="half-width" key={imageUrl}>
               <img src={imageUrl} alt="Gallery" />
               <div>
-              <input
-                type="checkbox"
-                onChange={() => this.toggleImageSelection(imageUrl)}
-                checked={selectedImages.has(imageUrl)}
-              />
-              <input
-                type="button"
-                value="+"
-                onClick={() => this.deleteImage(imageUrl)}
-              />
+                <input
+                  type="checkbox"
+                  onChange={() => this.toggleImageSelection(imageUrl)}
+                  checked={selectedImages.has(imageUrl)}
+                />
+                <input
+                  type="button"
+                  value="+"
+                  onClick={() => this.expandImage(imageUrl)}
+                />
+                <input
+                  type="button"
+                  value="-"
+                  onClick={() => this.deleteImage(imageUrl)}
+                />
               </div>
-            </div>
+            </figure>
           ))}
         </div>
+        {expandedImage && (
+          <div className="image-overlay">
+            <div className="expanded-image">
+              <div style={{ position: 'absolute', left: '50%', top: '50%',transform: 'translate(-50%, -50%)'}}>
+              <img src={expandedImage} alt="Gallery" />
+
+              <center>
+                <button onClick={this.closeExpandedImage}>Close</button>
+              </center>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -57,16 +83,17 @@ function ImgDisplay() {
   // Define an array of image URLs.
   const imageUrls = [
     'https://images.trvl-media.com/lodging/56000000/55360000/55359000/55358926/6af3f6de.jpg?impolicy=resizecrop&rw=500&ra=fit',
-    './previews/2.jpg',
-    './previews/3.jpg'
+    'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg',
+    'https://fujifilm-x.com/wp-content/uploads/2021/01/gfx100s_sample_04_thum-1.jpg'
     // Add more image URLs here.
   ];
 
   return (
     <div className="App">
-      <ImageGallery imageUrls={imageUrls} />  {/* Pass the imageUrls array as a prop. */}
+      <ImageGallery imageUrls={imageUrls} /> {/* Pass the imageUrls array as a prop. */}
     </div>
   );
 }
 
 export default ImgDisplay;
+

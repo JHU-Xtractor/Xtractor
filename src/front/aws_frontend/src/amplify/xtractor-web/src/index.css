@@ -11,3 +11,44 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+.two-images 
+{ 
+    display:            flex; 
+    flex-flow:          row nowrap; 
+    justify-content:    space-between;  
+} 
+.half-width 
+{ 
+    width: 48%; 
+} 
+
+
+.image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* Ensure it's on top of other elements */
+}
+
+.expanded-image {
+  background: black;
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  z-index: -1;
+  opacity: 0.8;
+}
+
+.expanded-image iframe {
+  position: center;
+  width: 100%;
+  height: 100%;
+}
