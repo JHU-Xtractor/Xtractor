@@ -40,7 +40,7 @@ class ImageGallery extends Component {
         <div className="two-images">
           {imageUrls.map((imageUrl) => (
             <figure className="half-width" key={imageUrl}>
-              <img src={imageUrl} alt="Gallery" />
+              <img src={imageUrl} alt="Gallery" className = "img-size" />
               <div>
                 <input
                   type="checkbox"
