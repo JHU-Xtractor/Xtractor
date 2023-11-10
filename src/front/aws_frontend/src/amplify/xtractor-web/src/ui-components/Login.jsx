@@ -13,7 +13,6 @@ import {
   Flex,
   Text,
   TextField,
-  View,
 } from "@aws-amplify/ui-react";
 export default function Login(props) {
   const { overrides, ...rest } = props;
@@ -80,17 +79,17 @@ export default function Login(props) {
         children="Login"
         {...getOverrideProps(overrides, "Button")}
       ></Button>
-      <View
-        width="472px"
-        height="43px"
-        display="block"
-        gap="unset"
-        alignItems="unset"
-        justifyContent="unset"
+      <Flex
+        gap="26px"
+        direction="row"
+        width="unset"
+        height="unset"
+        justifyContent="flex-start"
+        alignItems="flex-start"
         overflow="hidden"
         shrink="0"
         position="relative"
-        padding="0px 0px 0px 0px"
+        padding="3px 0px 3px 0px"
         {...getOverrideProps(overrides, "Frame 437")}
       >
         <Text
@@ -107,9 +106,8 @@ export default function Login(props) {
           height="28px"
           gap="unset"
           alignItems="unset"
-          position="absolute"
-          top="3px"
-          left="0px"
+          shrink="0"
+          position="relative"
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
           children="Not An Existing User?"
@@ -129,9 +127,8 @@ export default function Login(props) {
           height="23px"
           gap="unset"
           alignItems="unset"
-          position="absolute"
-          top="3px"
-          left="157px"
+          shrink="0"
+          position="relative"
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
           children="Sign Up"
@@ -151,15 +148,14 @@ export default function Login(props) {
           height="18px"
           gap="unset"
           alignItems="unset"
-          position="absolute"
-          top="5px"
-          left="358px"
+          shrink="0"
+          position="relative"
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
           children="Forgot Password"
           {...getOverrideProps(overrides, "Forgot Password")}
         ></Text>
-      </View>
+      </Flex>
     </Flex>
   );
 }

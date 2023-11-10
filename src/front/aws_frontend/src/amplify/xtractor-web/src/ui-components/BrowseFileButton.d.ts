@@ -7,15 +7,12 @@
 import * as React from "react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { ButtonProps, FlexProps } from "@aws-amplify/ui-react";
-import { SyntheticEvent } from "react";
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
-export declare type ProcessNewFileButtonOverridesProps = {
-    ProcessNewFileButton?: PrimitiveOverrideProps<FlexProps>;
-    "Process New File Button"?: PrimitiveOverrideProps<ButtonProps>;
+export declare type BrowseFileButtonOverridesProps = {
+    BrowseFileButton?: PrimitiveOverrideProps<FlexProps>;
+    Button?: PrimitiveOverrideProps<ButtonProps>;
 } & EscapeHatchProps;
-export declare type ProcessNewFileButtonProps = React.PropsWithChildren<Partial<FlexProps> & {
-    uploadFile?: (event: SyntheticEvent) => void;
-} & {
-    overrides?: ProcessNewFileButtonOverridesProps | undefined | null;
+export declare type BrowseFileButtonProps = React.PropsWithChildren<Partial<FlexProps> & {
+    overrides?: BrowseFileButtonOverridesProps | undefined | null;
 }>;
-export default function ProcessNewFileButton(props: ProcessNewFileButtonProps): React.ReactElement;
+export default function BrowseFileButton(props: BrowseFileButtonProps): React.ReactElement;

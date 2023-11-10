@@ -5,6 +5,7 @@
  **************************************************************************/
 
 export { default as CommentCard } from "./CommentCard";
+export { default as BrowseFileButton } from "./BrowseFileButton";
 export { default as NavBarHeader2 } from "./NavBarHeader2";
 export { default as ActionCard } from "./ActionCard";
 export { default as UploadFiles } from "./UploadFiles";

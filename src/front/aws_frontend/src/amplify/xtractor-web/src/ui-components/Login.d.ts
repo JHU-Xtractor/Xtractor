@@ -6,7 +6,7 @@
 
 import * as React from "react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
-import { ButtonProps, CheckboxFieldProps, FlexProps, TextFieldProps, TextProps, ViewProps } from "@aws-amplify/ui-react";
+import { ButtonProps, CheckboxFieldProps, FlexProps, TextFieldProps, TextProps } from "@aws-amplify/ui-react";
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type LoginOverridesProps = {
     Login?: PrimitiveOverrideProps<FlexProps>;
@@ -14,7 +14,7 @@ export declare type LoginOverridesProps = {
     TextField38474616?: PrimitiveOverrideProps<TextFieldProps>;
     CheckboxField?: PrimitiveOverrideProps<CheckboxFieldProps>;
     Button?: PrimitiveOverrideProps<ButtonProps>;
-    "Frame 437"?: PrimitiveOverrideProps<ViewProps>;
+    "Frame 437"?: PrimitiveOverrideProps<FlexProps>;
     "Not An Existing User?"?: PrimitiveOverrideProps<TextProps>;
     "Sign Up"?: PrimitiveOverrideProps<TextProps>;
     "Forgot Password"?: PrimitiveOverrideProps<TextProps>;

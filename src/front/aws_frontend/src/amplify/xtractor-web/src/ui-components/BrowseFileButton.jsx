@@ -8,8 +8,8 @@
 import * as React from "react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { Button, Flex } from "@aws-amplify/ui-react";
-export default function ProcessNewFileButton(props) {
-  const { uploadFile, overrides, ...rest } = props;
+export default function BrowseFileButton(props) {
+  const { overrides, ...rest } = props;
   return (
     <Flex
       gap="0"
@@ -20,19 +20,19 @@ export default function ProcessNewFileButton(props) {
       alignItems="flex-start"
       position="relative"
       padding="0px 0px 0px 0px"
-      {...getOverrideProps(overrides, "ProcessNewFileButton")}
+      {...getOverrideProps(overrides, "BrowseFileButton")}
       {...rest}
     >
       <Button
-        width="580px"
-        height="48px"
+        width="272px"
+        height="unset"
         shrink="0"
+        alignSelf="stretch"
         size="large"
         isDisabled={false}
         variation="primary"
-        children="Process A New File"
-        onClick={uploadFile}
-        {...getOverrideProps(overrides, "Process New File Button")}
+        children="Browse Files"
+        {...getOverrideProps(overrides, "Button")}
       ></Button>
     </Flex>
   );

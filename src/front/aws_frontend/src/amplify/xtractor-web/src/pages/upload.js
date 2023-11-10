@@ -1,8 +1,8 @@
 import '../App.css';
 
 import {NavBarSide} from '../ui-components';
-import { FileUploader } from '@aws-amplify/ui-react';
 import {ProcessNewFileButton} from '../ui-components'
+import {Login}  from '../ui-components';
 
 
 // const UploadButton = ()=> {
@@ -20,6 +20,10 @@ import {ProcessNewFileButton} from '../ui-components'
 
 // }
 
+const uploadFile = (e) => {
+    e.preventDefault();
+    console.log('The link was clicked.');
+}
 
 function Upload () {
 
@@ -30,7 +34,9 @@ function Upload () {
   return (
     <div className="Parent">
         <span class = 'navbar'> <NavBarSide /> </span>
-        <span class = 'main'> <ProcessNewFileButton /> </span>
+        <span class = 'main'> <ProcessNewFileButton uploadFile={uploadFile}/> </span>
+        <span class = 'footer'> <Login /> </span>
+
     </div>
   )
 }
