@@ -15,7 +15,9 @@ Amplify.configure(awsconfig);
 // use the Amplify Provider component to intialize CSS
 ReactDOM.render(
   <AmplifyProvider>
-<ThemeProvider theme={studioTheme}><App /></ThemeProvider>
-    </AmplifyProvider>,
+    <ThemeProvider theme={studioTheme}>
+        <App />
+    </ThemeProvider>
+  </AmplifyProvider>,
   document.getElementById('root')
 )

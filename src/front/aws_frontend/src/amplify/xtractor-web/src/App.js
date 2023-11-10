@@ -1,15 +1,28 @@
 import './App.css';
-import {Login } from './ui-components';
-import Upload from './pages/upload';
+import Terms from './pages/terms.js';
+import Login from './pages/login.js';
+import {Route, Routes, BrowserRouter} from 'react-router-dom';
 
-function App () {
-  return Upload();
+function App() {
+
+    return (
+      <div className="App">
+      <BrowserRouter>
+      <div>
+        <Routes>
+          <Route exact path="/terms" element = {<Terms />} />
+        </Routes>
+        <Routes>
+          <Route exact path="/" element = {<Login />} />
+        </Routes>
+      </div>
+      </BrowserRouter>
+
+      </div>
+    );
 }
 
-
-export default App;
-
-  
+  export default App;
     // <div>
     //   <center> <ImgDisplay /> </center>
     // </div>
