@@ -15,8 +15,9 @@ export declare type LoginOverridesProps = {
     CheckboxField?: PrimitiveOverrideProps<CheckboxFieldProps>;
     Button?: PrimitiveOverrideProps<ButtonProps>;
     "Frame 437"?: PrimitiveOverrideProps<ViewProps>;
-    label3854575?: PrimitiveOverrideProps<TextProps>;
-    label38591747?: PrimitiveOverrideProps<TextProps>;
+    "Not An Existing User?"?: PrimitiveOverrideProps<TextProps>;
+    "Sign Up"?: PrimitiveOverrideProps<TextProps>;
+    "Forgot Password"?: PrimitiveOverrideProps<TextProps>;
 } & EscapeHatchProps;
 export declare type LoginProps = React.PropsWithChildren<Partial<FlexProps> & {
     overrides?: LoginOverridesProps | undefined | null;

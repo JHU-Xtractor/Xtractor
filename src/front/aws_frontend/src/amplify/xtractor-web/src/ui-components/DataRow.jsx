@@ -41,7 +41,7 @@ export default function DataRow(props) {
         position="relative"
         padding="0px 0px 0px 0px"
         whiteSpace="pre-wrap"
-        children="Label"
+        children="File Name"
         {...getOverrideProps(overrides, "label")}
       ></Text>
       <Text
@@ -64,7 +64,7 @@ export default function DataRow(props) {
         position="relative"
         padding="0px 0px 0px 0px"
         whiteSpace="pre-wrap"
-        children="Value"
+        children="Date"
         {...getOverrideProps(overrides, "value")}
       ></Text>
       <Button

@@ -7,7 +7,7 @@
 /* eslint-disable */
 import * as React from "react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import LogoWithText from "./LogoWithText";
+import LogoSmall from "./LogoSmall";
 import { Flex, Image, Text } from "@aws-amplify/ui-react";
 import MyIcon from "./MyIcon";
 export default function NavBarHeader(props) {
@@ -27,19 +27,6 @@ export default function NavBarHeader(props) {
       {...getOverrideProps(overrides, "NavBarHeader")}
       {...rest}
     >
-      <LogoWithText
-        width="127.88px"
-        height="18.91px"
-        display="block"
-        gap="unset"
-        alignItems="unset"
-        justifyContent="unset"
-        shrink="0"
-        position="relative"
-        padding="0px 0px 0px 0px"
-        color="brand"
-        {...getOverrideProps(overrides, "LogoWithText")}
-      ></LogoWithText>
       <Flex
         gap="40px"
         direction="row"
@@ -54,6 +41,18 @@ export default function NavBarHeader(props) {
         padding="0px 0px 0px 0px"
         {...getOverrideProps(overrides, "Frame 32129767076")}
       >
+        <LogoSmall
+          width="81px"
+          height="72px"
+          display="block"
+          gap="unset"
+          alignItems="unset"
+          justifyContent="unset"
+          shrink="0"
+          position="relative"
+          padding="0px 0px 0px 0px"
+          {...getOverrideProps(overrides, "Logo Small")}
+        ></LogoSmall>
         <Text
           fontFamily="Inter"
           fontSize="16px"

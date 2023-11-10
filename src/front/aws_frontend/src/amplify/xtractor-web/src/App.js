@@ -1,35 +1,18 @@
 import './App.css';
-import ImgDisplay  from './images';
 import {Login } from './ui-components';
-import {Logo} from './ui-components';
-import {NavBarHeader} from './ui-components';
-
+import Upload from './pages/upload';
 
 function App () {
-  return (
-    <body>
-    {/* <div style={{ position: 'absolute', left: '50%', top: '30%',transform: 'translate(-50%, -50%)'}}>
-      <center>
-        <Logo /> 
-      </center>
-    </div>
-    <div style={{ position: 'absolute', left: '50%', top: '60%',transform: 'translate(-50%, -50%)'}}>
-      <center>
-        <Login /> 
-      </center>
-    </div>
-    */
-    <div>
-      <center> <ImgDisplay /> </center>
-    </div>
- } </body> 
-
-
-  )
+  return Upload();
 }
+
+
 export default App;
 
-
+  
+    // <div>
+    //   <center> <ImgDisplay /> </center>
+    // </div>
 // function Upload() {
 //   return (
 //     <div className="App">
