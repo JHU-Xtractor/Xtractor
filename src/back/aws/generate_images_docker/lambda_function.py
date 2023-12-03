@@ -34,9 +34,13 @@ def lambda_handler(event, context):
     response = ""
 
     # acquire the user and file
-    userName = event["Records"][0]["body"].split(",")[0]
-    file = event["Records"][0]["body"].split(",")[1]
-    receiptHandle = event["Records"][0]["receiptHandle"]
+    # userName = event["Records"][0]["body"].split(",")[0]
+    # file = event["Records"][0]["body"].split(",")[1]
+    # receiptHandle = event["Records"][0]["receiptHandle"]
+
+    # test
+    userName = event["userName"]
+    file = event["file"]
 
     # format of the files is jobID+page#.jpg
     jobID = file.split(".")[0]
@@ -68,29 +72,29 @@ def lambda_handler(event, context):
         # upload back to S3
         s3Client.upload_file(generatedFile, BUCKET, userName + "/" + fullFileName)
 
-    # lastly delete from queue
-    response = sqs.delete_message(QueueUrl=QUEUE_URL, ReceiptHandle=receiptHandle)
-    print("SQS")
-    print(response)
+    # # lastly delete from queue
+    # response = sqs.delete_message(QueueUrl=QUEUE_URL, ReceiptHandle=receiptHandle)
+    # print("SQS")
+    # print(response)
 
-    # publish successful upload to SNS
-    numPages = len(images)
-    message = {
-        "jobID": jobID,
-        "userName": userName,
-        "file": file,
-        "num pages": numPages,
-    }
-    response = sns.publish(
-        TargetArn=ARN,
-        Message=json.dumps({"default": json.dumps(message)}),
-        MessageStructure="json",
-    )
+    # # publish successful upload to SNS
+    # numPages = len(images)
+    # message = {
+    #     "jobID": jobID,
+    #     "userName": userName,
+    #     "file": file,
+    #     "num pages": numPages,
+    # }
+    # response = sns.publish(
+    #     TargetArn=ARN,
+    #     Message=json.dumps({"default": json.dumps(message)}),
+    #     MessageStructure="json",
+    # )
 
-    # add to list of jobs
-    addToListOfJobs(jobID, userName)
-    print("SNS")
-    print(response)
+    # # add to list of jobs
+    # addToListOfJobs(jobID, userName)
+    # print("SNS")
+    # print(response)
 
 
 def addToListOfJobs(jobID, username):
@@ -105,6 +109,6 @@ def addToListOfJobs(jobID, username):
     print(response)
 
 
-# if __name__ == "__main__":
-#     testDictionary = {"userName": "johndoe", "file": "invite.pdf"}
-#     lambda_handler(testDictionary, None)
+if __name__ == "__main__":
+    testDictionary = {"userName": "kathyli", "file": "14324124.pdf"}
+    lambda_handler(testDictionary, None)
