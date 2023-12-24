@@ -2,7 +2,7 @@
 # DATABSE NAMES
 XTRACTOR_USERS_TABLE = "xtractor_users"
 
-
+BUCKET_NAME = "xtractor-main"
 
 # COMMON UTILITIES
 def formatError(error: str) -> str:

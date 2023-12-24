@@ -1,21 +1,31 @@
 import boto3
-import database
-import cognito
 import json
 import constants as const
+from s3 import S3Manager
+from cognito import CognitoManager
+
+s3 = boto3.client('s3')
+
 
 def lambda_handler(event,context):
 
-    event = json.loads(event['body'])
-
-    # create in cogntio
-    code, response = cognito.create_user(event)
+    print(event)
 
 
-    if code == 200:
-        # create in database
-        code, response = database.create_user(event)
+    # get user ID 
+    cognitoManager = CognitoManager()
+    code, userID = cognitoManager.getClaimsUserName(event)
 
+    if code != 200:
+        return {
+            'headers': const.HEADERS,
+            'statusCode': code,
+            'body': "{" + f"\"message\": "+ userID + "}"
+        }
+
+    s3Manager = S3Manager()
+    # create the folder for the user
+    code, response = s3Manager.createFolder(const.BUCKET_NAME, userID)
 
     return {
         'headers': const.HEADERS,

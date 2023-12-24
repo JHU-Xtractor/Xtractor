@@ -12,6 +12,8 @@ def lambda_handler(event, context):
     # get the body content
     queryContent = event["queryStringParameters"]
 
+    authClient = auth.Authenticator(DEFAULT_ORIGIN)
+
     if queryContent is None:
         return authClient.getResponse(json.dumps({"error": "No query string parameters"}), 400)
     
@@ -44,24 +46,27 @@ def lambda_handler(event, context):
     if "download" in queryContent:
         # get all files from the bucket that start with the key
 
-        listURLs = []
-        for file in s3.list_objects(Bucket=bucket, Prefix=key)["Contents"]:
-
         
-            if file["Key"].startswith(key) and file["Key"].endswith(".jpg"):
+        try:
+            listURLs = []
+            for file in s3.list_objects(Bucket=bucket, Prefix=key)["Contents"]:
 
-                print(file["Key"])
-                # Generate the presigned URL for get object (images)
-                presigned_url = s3.generate_presigned_url(
-                    ClientMethod='get_object',
-                    Params={
-                        'Bucket': bucket,
-                        'Key': file["Key"],
+                if file["Key"].startswith(key) and (file["Key"].endswith(".jpg") or file["Key"].endswith(".JPG")):
 
-                    },
-                    ExpiresIn=3600,
-                )
-                listURLs.append(presigned_url)
+                    print(file["Key"])
+                    # Generate the presigned URL for get object (images)
+                    presigned_url = s3.generate_presigned_url(
+                        ClientMethod='get_object',
+                        Params={
+                            'Bucket': bucket,
+                            'Key': file["Key"],
+
+                        },
+                        ExpiresIn=3600,
+                    )
+                    listURLs.append(presigned_url)
+        except KeyError:
+            return authClient.getResponse(json.dumps({"error": "No files found"}), 400)
 
         return authClient.getResponse(json.dumps({"urls": listURLs}), 200)
 
