@@ -42,6 +42,16 @@ class S3Manager:
             return 400, "Error Creating Folder: " + str(response)
         return 200, "Folder created."
 
+    def uploadFile(self, bucketName: str, fileName: str, fileData: str):
+        """
+        Uploads a file to S3.
+        """
+        try:
+            response = self.s3.put_object(Bucket=bucketName, Key=fileName, Body=fileData)
+        except:
+            return 400, "Error Uploading File: " + str(response)
+        return 200, "File uploaded."
+
     def deleteFolder(self, bucketName: str, folderName: str):
         """
         Deletes a folder in S3.

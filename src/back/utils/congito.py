@@ -21,5 +21,5 @@ def changeUserPassword(userName: str):
         print(e)
 
 if __name__ == '__main__':
-    userName = "kathyli"
+    userName = "john_doe"
     changeUserPassword(userName)

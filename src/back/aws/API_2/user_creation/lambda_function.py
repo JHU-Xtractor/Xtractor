@@ -4,6 +4,8 @@ import constants as const
 from s3 import S3Manager
 from cognito import CognitoManager
 
+DEFAULT_PROFILE_PICTURE = "./profilePicture.JPG"
+
 s3 = boto3.client('s3')
 
 
@@ -26,6 +28,7 @@ def lambda_handler(event,context):
     s3Manager = S3Manager()
     # create the folder for the user
     code, response = s3Manager.createFolder(const.BUCKET_NAME, userID)
+    s3Manager.uploadFile(const.BUCKET_NAME, userID + "/profilePicture.JPG", DEFAULT_PROFILE_PICTURE)
 
     return {
         'headers': const.HEADERS,

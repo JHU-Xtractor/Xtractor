@@ -1,23 +1,13 @@
 import boto3
-import json
-import constants as const
 import cognito as cognitoManager
+import constants as const
 
 
 def lambda_handler(event, context):
-    """
-    This function is triggered by API Gateway and will update the user's fields
-    :param: event: dictionary containing username, email, password, and security (not all fields required, only username)
-    :param: context: lambda context (not used)
-    """
 
-    # get body 
-    body = json.loads(event['body'])
-    # get newPassword
-    newPassword = body['newPassword']
-
-    # first get the claims
     cognito = cognitoManager.CognitoManager()
+
+    # Get the username from the claims in the event.
     status, userName = cognito.getClaimsUserName(event)
 
     if status != 200:
@@ -27,8 +17,9 @@ def lambda_handler(event, context):
             'body': "{" + f"\"message\": "+ userName + "}"
         }
     
-    # change the password
-    status, response = cognito.changeUserPassword(userName, newPassword)
+    # get information about the user
+    status, response = cognito.getInformationAboutUser(userName)
+
 
     if status != 200:
         return {
@@ -38,9 +29,11 @@ def lambda_handler(event, context):
 
         }
     else:
+        stringResponse = str(response["UserAttributes"]).replace("\'", "\"")
+        
+        # return in json format
         return {
             'headers': const.HEADERS,
             'statusCode': status,
-            'body': "{" + f"\"message\":  \"Password changed successfully.\"" + "}"
+            'body': "{" + f"\"message\": "+ stringResponse + "}"
         }
-
