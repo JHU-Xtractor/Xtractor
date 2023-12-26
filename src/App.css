@@ -1,0 +1,223 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-Center {
+  text-align: center;
+}
+
+.App-header::-webkit-scrollbar {
+  width: 12px; /* For Chrome, Edge, and Safari */
+}
+
+.App-header::-webkit-scrollbar-track {
+  background: rgb(255, 255, 255)5, 255, 255; /* For Chrome, Edge, and Safari */
+}
+
+
+
+.App-header::-webkit-scrollbar-thumb {
+  background-color: blue; /* For Chrome, Edge, and Safari */
+  border-radius: 20px; /* For Chrome, Edge, and Safari */
+  border: 3px solid orange; /* For Chrome, Edge, and Safari */
+}
+
+.App-header {
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  overflow-y: auto;
+  height: 100vh;
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #cbcbcb rgb(255, 255, 255); /* For Firefox */
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: auto;
+}
+
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Navigation Bar to Side */
+.navbar {
+  overflow: hidden;
+  height: 100vh;
+  width: 20vh;
+  float: left
+}
+
+.navbar-left {
+  position: absolute;
+  float: left
+}
+
+.bodyWithBar {
+  flex: 1;
+  top: 0;
+  right: 0;
+  position:absolute;
+  height: 100vh;
+  width: 80vh;
+}
+
+.leftHalf {
+  position: absolute;
+  float: left;
+  height: 100vh;
+  width: 40vh;
+}
+
+.rightHalf {
+  position: absolute;
+  float: right;
+  height: 100vh;
+  width: 40vh;
+}
+
+/*upload button in the middle*/
+.upload {
+  position: absolute;
+  top: 50%;
+  left: 70%;
+  transform: translate(-50%, -50%);
+}
+
+body {
+  font-family:  'Inter', sans-serif;
+}
+
+/*content*/
+.content{
+  position:Left;
+  width:60%;
+  height: 100vh;
+}
+
+/*content-expanded*/
+.content-expanded{
+  position:Left;
+  width:90%;
+  height: 100vh
+}
+
+/*parent*/
+.Parent{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/*content body main images - grid*/
+.content-body-main-body-images {
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  scrollbar-width: thin; /* "auto" or "thin"  */
+  scrollbar-color: #888 #f1f1f1; /* scroll thumb and track color */
+}
+
+/* For Chrome, Safari, and Opera */
+.content-body-main-body-images::-webkit-scrollbar {
+  width: 10px; /* width of the entire scrollbar */
+}
+
+.content-body-main-body-images::-webkit-scrollbar-track {
+  background: #f1f1f1; /* color of the tracking area */
+}
+
+.content-body-main-body-images::-webkit-scrollbar-thumb {
+  background: #888; /* color of the scroll thumb */
+}
+
+.content-body-main-body-images::-webkit-scrollbar-thumb:hover {
+  background: #555; /* color of the scroll thumb on hover */
+}
+
+.container {
+  display: flex;
+}
+
+
+.image-container {
+  position: relative;
+}
+
+.expand-button {
+  position: absolute;
+  top: 0;
+  left: 1;
+  z-index:1;
+}
+
+.expanded-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+
+  z-index: 1000;
+}
+
+.close-button {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 0);
+}
+.selectionRect {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  z-index: 1;
+}
+
+.image-csv-container {
+  display: flex;
+}
+
+.image-container {
+  flex: 1;
+}
+
+.csv-container {
+  flex: 1;
+}
+

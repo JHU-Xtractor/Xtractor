@@ -4,6 +4,7 @@ import botocore
 from botocore.exceptions import ClientError
 from pdf2image import convert_from_path
 import json
+from datetime import datetime
 
 # constants - AWS
 BUCKET = "xtractor-main"
@@ -11,6 +12,9 @@ s3 = boto3.resource("s3")
 s3Client = boto3.client("s3")
 sqs = boto3.client("sqs")
 sns = boto3.client("sns")
+dynamoDB = boto3.resource("dynamodb")
+JOB_TABLE = "listOfJobs"
+
 ARN = "arn:aws:sns:us-east-1:214775916492:xtractor_images_created"
 
 QUEUE_URL = (
@@ -20,19 +24,23 @@ QUEUE_URL = (
 
 def lambda_handler(event, context):
     """
-    This function is triggered by SQS and will generate images from a pdf file 
+    This function is triggered by SQS and will generate images from a pdf file
     while also uploading them to S3 and publishing a notification to SNS
     :param: event: dictionary containing userName and file
     :param: context: lambda context (not used)
     """
 
-    #response message
+    # response message
     response = ""
 
     # acquire the user and file
-    userName = event["Records"][0]["body"].split(",")[0]
-    file = event["Records"][0]["body"].split(",")[1]
-    receiptHandle = event["Records"][0]["receiptHandle"]
+    # userName = event["Records"][0]["body"].split(",")[0]
+    # file = event["Records"][0]["body"].split(",")[1]
+    # receiptHandle = event["Records"][0]["receiptHandle"]
+
+    # test
+    userName = event["userName"]
+    file = event["file"]
 
     # format of the files is jobID+page#.jpg
     jobID = file.split(".")[0]
@@ -64,28 +72,43 @@ def lambda_handler(event, context):
         # upload back to S3
         s3Client.upload_file(generatedFile, BUCKET, userName + "/" + fullFileName)
 
-    # lastly delete from queue
-    response = sqs.delete_message(QueueUrl=QUEUE_URL, ReceiptHandle=receiptHandle)
-    print("SQS")
-    print(response)
+    # # lastly delete from queue
+    # response = sqs.delete_message(QueueUrl=QUEUE_URL, ReceiptHandle=receiptHandle)
+    # print("SQS")
+    # print(response)
 
-    # publish successful upload to SNS
-    numPages = (len(images))
-    message = {
-        "jobID": jobID,
-        "userName": userName,
-        "file": file,
-        "num pages": numPages
-    }
-    response = sns.publish(
-        TargetArn=ARN,
-        Message=json.dumps({"default": json.dumps(message)}),
-        MessageStructure="json",
+    # # publish successful upload to SNS
+    # numPages = len(images)
+    # message = {
+    #     "jobID": jobID,
+    #     "userName": userName,
+    #     "file": file,
+    #     "num pages": numPages,
+    # }
+    # response = sns.publish(
+    #     TargetArn=ARN,
+    #     Message=json.dumps({"default": json.dumps(message)}),
+    #     MessageStructure="json",
+    # )
+
+    # # add to list of jobs
+    # addToListOfJobs(jobID, userName)
+    # print("SNS")
+    # print(response)
+
+
+def addToListOfJobs(jobID, username):
+    """
+    This function will add the job to the list of jobs in the database
+    :param: jobID: jobID to add
+    """
+    response = dynamoDB.Table(JOB_TABLE).put_item(
+        Item={"JOB_ID": jobID, "time": str(datetime.now()), "username": username}
     )
-    print("SNS")
+    print("dynamoDb")
     print(response)
 
 
-# if __name__ == "__main__":
-#     testDictionary = {"userName": "johndoe", "file": "invite.pdf"}
-#     lambda_handler(testDictionary, None)
+if __name__ == "__main__":
+    testDictionary = {"userName": "kathyli", "file": "14324124.pdf"}
+    lambda_handler(testDictionary, None)

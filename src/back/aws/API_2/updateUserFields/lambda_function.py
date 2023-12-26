@@ -1,8 +1,8 @@
 import boto3
 import json
-import userEntry as user
+import constants as const
+import cognito as cognitoManager
 
-dynamodb = boto3.resource('dynamodb')
 
 def lambda_handler(event, context):
     """
@@ -11,80 +11,36 @@ def lambda_handler(event, context):
     :param: context: lambda context (not used)
     """
 
-    # setup infrastructure
-    userEntry = user.UserEntry(dynamodb)
+    # get body 
+    body = json.loads(event['body'])
+    # get newPassword
+    newPassword = body['newPassword']
 
-    # check if user is in database
-    if not userEntry.checkIfUserExists(event['username']):
+    # first get the claims
+    cognito = cognitoManager.CognitoManager()
+    status, userName = cognito.getClaimsUserName(event)
+
+    if status != 200:
         return {
-            'statusCode': 400,
-            'body': json.dumps('User does not exist')
+            'headers': const.HEADERS,
+            'statusCode': status,
+            'body': "{" + f"\"message\": "+ userName + "}"
         }
     
-    #check if username mandatory field is there
-    if "username" not in event:
+    # change the password
+    status, response = cognito.changeUserPassword(userName, newPassword)
+
+    if status != 200:
         return {
-            'statusCode': 400,
-            'body': json.dumps('Username not provided - Required Field')
+            'headers': const.HEADERS,
+            'statusCode': status,
+            'body': "{" + f"\"message\": "+ str(response) + "}"
+
+        }
+    else:
+        return {
+            'headers': const.HEADERS,
+            'statusCode': status,
+            'body': "{" + f"\"message\":  \"Password changed successfully.\"" + "}"
         }
 
-    # modify email, password, and security question/answer etc.
-    # note that multiple modifications can occur at once
-    response = ""
-    for modification in event:
-        if modification == 'email':
-            # modify email value
-            if userEntry.updateEmail(event['username'],event['email']) is False:
-                response = response + "Email update failed\n"
-                return {
-                    'statusCode': 400,
-                    'body': response
-                }
-            else:
-                response = response + "Email updated\n"
-        elif modification == 'password':
-            # modify password
-            if userEntry.updatePassword(event['username'],event['password']) is False:
-                response = response + "Password update failed\n"
-                return {
-                    'statusCode': 400,
-                    'body': response
-                }
-            else:
-                response = response + "Password updated\n"
-        elif modification == 'security':
-            # update security question and answer
-            if userEntry.updateSecurityQuestion(event['username'],event['security']['security_question']) is False:
-                response = response + "Security update failed\n"
-                return {
-                    'statusCode': 400,
-                    'body': response
-                }
-            else:
-                response = response + "Security updated\n"
-
-            if userEntry.updateSecurityAnswer(event['username'],event['security']['security_answer']) is False:
-                response = response + "Security update failed\n"
-                return {
-                    'statusCode': 400,
-                    'body': response
-                }
-            else:
-                response = response + "Security updated\n"
-        
-    # return the response
-    return {
-        'statusCode': 200,
-        'body': json.dumps(response)
-    }
-
-# COMMENT OUT FOR TESTING
-
-# if __name__ is "__main__":
-#     event = {
-#         'username': "USERNAME",
-#         'email': 'test@jhu.edu',
-#         'password': 'test'
-#     }
-#     print(lambda_handler(event, None))
-#     print("Testing updateUserFields")
