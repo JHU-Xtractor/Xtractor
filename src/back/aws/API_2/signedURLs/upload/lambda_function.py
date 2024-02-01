@@ -40,7 +40,7 @@ def lambda_handler(event, context):
             },
             ExpiresIn=3600
         )
-        return authClient.getResponse(json.dumps({"url": presigned_url}), 200)
+        output =  authClient.getResponse(json.dumps({"url": presigned_url}), 200)
 
 
     if "download" in queryContent:
@@ -68,5 +68,9 @@ def lambda_handler(event, context):
         except KeyError:
             return authClient.getResponse(json.dumps({"error": "No files found"}), 400)
 
-        return authClient.getResponse(json.dumps({"urls": listURLs}), 200)
+        output =  authClient.getResponse(json.dumps({"urls": listURLs}), 200)
+
+    print(output)
+    print(type(output))
+    return output
 

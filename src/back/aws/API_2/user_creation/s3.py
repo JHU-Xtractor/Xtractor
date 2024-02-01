@@ -38,8 +38,8 @@ class S3Manager:
         """
         try:
             response = self.s3.put_object(Bucket=bucketName, Key=(folderName+'/'))
-        except:
-            return 400, "Error Creating Folder: " + str(response)
+        except Exception as e:
+            return 400, "Error Creating Folder: " + str(e)
         return 200, "Folder created."
 
     def uploadFile(self, bucketName: str, fileName: str, fileData: str):
@@ -48,8 +48,8 @@ class S3Manager:
         """
         try:
             response = self.s3.put_object(Bucket=bucketName, Key=fileName, Body=fileData)
-        except:
-            return 400, "Error Uploading File: " + str(response)
+        except Exception as e:
+            return 400, "Error Uploading File: " + str(e)
         return 200, "File uploaded."
 
     def deleteFolder(self, bucketName: str, folderName: str):
