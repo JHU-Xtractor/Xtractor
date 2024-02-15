@@ -60,7 +60,7 @@ def uploadToS3(file, bucket, objectName):
         # S3 client
         s3 = boto3.client('s3')
         
-        print("uploading to s3: " + file)
+        print("uploading to s3: " + objectName)
 
         # Upload the file
         s3.upload_file(file, bucket, objectName)
@@ -103,7 +103,7 @@ def split_pdf(file_path, output_path,userName):
             pdf_writer.write(output_pdf)
         
         # # upload to s3
-        s3_output = userName + output_filename.replace(output_path , "")
+        s3_output = userName + "/" + file_path.split("/")[-1].replace("_unique.pdf","")  + output_filename.replace(output_path , "")
         uploadToS3(output_filename, BUCKET, s3_output)
 
         # # Send to SQS The finished file
@@ -137,6 +137,8 @@ def lambda_handler(event,context):
     ########### STEP 2: Get all the pdf pages together ###########
 
     outFileName = concatUniquePages(listOfPages,filePath)
+
+    print(outFileName)
 
     ########### STEP 3: Partition the PDF into batches of two pages ###########
 
