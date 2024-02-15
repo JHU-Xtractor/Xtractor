@@ -45,6 +45,7 @@ def sendToSQS(message):
         QueueUrl=QUEUE_URL,
         MessageBody=message,
         MessageGroupId="Xtractor",
+        MessageDeduplicationId=message
     )
 
     
@@ -59,6 +60,8 @@ def uploadToS3(file, bucket, objectName):
         # S3 client
         s3 = boto3.client('s3')
         
+        print("uploading to s3: " + file)
+
         # Upload the file
         s3.upload_file(file, bucket, objectName)
         
@@ -68,7 +71,7 @@ def uploadToS3(file, bucket, objectName):
 
 def concatUniquePages(listOfPages,file_path):
     pdf_file = open(file_path, 'rb')
-    pdf_reader = PyPDF2.PdfFileReader(pdf_file)
+    pdf_reader = PyPDF2.PdfReader(pdf_file)
 
     pdf_writer = PyPDF2.PdfWriter()
     for i in listOfPages:
@@ -85,7 +88,7 @@ def concatUniquePages(listOfPages,file_path):
     
 def split_pdf(file_path, output_path,userName):
 
-    pdf_file = PyPDF2.PdfFileReader(file_path)
+    pdf_file = PyPDF2.PdfReader(file_path)
 
     for i in range(0, len(pdf_file.pages), 2):
         pdf_writer = PyPDF2.PdfWriter()
@@ -94,12 +97,14 @@ def split_pdf(file_path, output_path,userName):
 
         output_filename = f"{output_path}/output_{i//2+1}.pdf"
 
+        print(output_filename)
+
         with open(output_filename, 'wb') as output_pdf:
             pdf_writer.write(output_pdf)
         
         # # upload to s3
         s3_output = userName + output_filename.replace(output_path , "")
-        uploadToS3(s3_output, BUCKET, output_filename.replace(TEMP_DIR + "/", ""))
+        uploadToS3(output_filename, BUCKET, s3_output)
 
         # # Send to SQS The finished file
         sendToSQS(output_filename.replace(TEMP_DIR + "/", ""))
