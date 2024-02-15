@@ -94,28 +94,30 @@ def testAuth(username: str, password: str,
         }
     )
 
-    print("Log in success")
-    print(resp)
-    print("Access token:", resp['AuthenticationResult']['AccessToken'])
-    print("ID token:", resp['AuthenticationResult']['IdToken'])
+    # print("Log in success")
+    # print(resp)
+    # print("Access token:", resp['AuthenticationResult']['AccessToken'])
+    # print("ID token:", resp['AuthenticationResult']['IdToken'])
     return resp
 
 if __name__ == '__main__':
-    username = 'kathyli'
+    username = 'jyoun127'
     # password = 'U3FY37Q1.MrX'
-    newPwd = '72]0Y\'5~T?b]'
+    newPwd = 'Password123!'
     user_pool_id = 'us-east-1_NQNnCAiWA'
     app_client_id = '4pp87j9uouhf7jcs98uqgq99nj'
     # preferred_username = 'pualJones2'
     # given_name = 'pualJones2'
 
     # reset password
-    response = admin_set_password(username,newPwd,user_pool_id)
+    # response = admin_set_password(username,newPwd,user_pool_id)
     # print(response)
 
     # test authentication
     response = testAuth(username,newPwd,user_pool_id,app_client_id)
-    print("auth response " + str(response))
+    # print("auth response " + str(response))
+
+    print("id token: " + response['AuthenticationResult']['IdToken'])
 
     # acquire the authentication token - note that for AWS CLI you must have the proper credentials
     # response = authenticate_and_get_token(username,password,user_pool_id,app_client_id) 
@@ -124,3 +126,5 @@ if __name__ == '__main__':
 
     # in the event that the user needs to change their password prior to using their token
     #changePassword(username,newPwd,user_pool_id,app_client_id,response,given_name,preferred_username)
+
+                    if (file["Key"].startswith(key) and ((file["Key"].endswith(".PNG") or file["Key"].endswith(".png") or file["Key"].endswith(".JPG") or file["Key"].endswith(".jpg")))):

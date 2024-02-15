@@ -13,13 +13,12 @@ def lambda_handler(event, context):
     queryContent = event["queryStringParameters"]
 
     authClient = auth.Authenticator(DEFAULT_ORIGIN)
-
     if queryContent is None:
         return authClient.getResponse(json.dumps({"error": "No query string parameters"}), 400)
     
     if "bucket" not in queryContent or "key" not in queryContent:
         return authClient.getResponse(json.dumps({"error": "Missing required query string parameters"}), 400)
-    
+
     bucket = queryContent["bucket"]
     key = queryContent["key"]
 
@@ -31,16 +30,19 @@ def lambda_handler(event, context):
 
     if "upload" in queryContent:
         # Generate the presigned URL for put requests
+        contentType = queryContent["contentType"]
+
         presigned_url = s3.generate_presigned_url(
-            ClientMethod='put_object',
+            'put_object',
             Params={
+                'ContentType': contentType,
                 'Bucket': bucket,
-                'Key': key,
-                'ContentType':  'application/pdf',
+                'Key': key
             },
             ExpiresIn=3600
         )
         output =  authClient.getResponse(json.dumps({"url": presigned_url}), 200)
+        return output
 
 
     if "download" in queryContent:
@@ -51,7 +53,7 @@ def lambda_handler(event, context):
             listURLs = []
             for file in s3.list_objects(Bucket=bucket, Prefix=key)["Contents"]:
 
-                if file["Key"].startswith(key) and (file["Key"].endswith(".jpg") or file["Key"].endswith(".JPG")):
+                if (file["Key"].startswith(key) and ((file["Key"].endswith(".PNG") or file["Key"].endswith(".png") or file["Key"].endswith(".JPG") or file["Key"].endswith(".jpg")))):
 
                     print(file["Key"])
                     # Generate the presigned URL for get object (images)
