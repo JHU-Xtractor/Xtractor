@@ -3,7 +3,7 @@ import json
 import PyPDF2
 import os
 
-BUCKET = "xtractor-main"
+BUCKET = "xtractor-main-v2"
 QUEUE_URL = "https://sqs.us-east-1.amazonaws.com/214775916492/xtractor_process_table.fifo"
 TEMP_DIR = "/tmp"
 
@@ -121,7 +121,7 @@ def lambda_handler(event,context):
     # listOfPages = json.loads(event['body'])['listOfPages']
     # listOfPages = list(map(int, listOfPages))
 
-    file = "jyoun127/702825010004.pdf"
+    file = "jyoun127/9a3acc14-9107-4d23-a555-73ce47e910f8.png"
     listOfPages = [0,1,2,3]
 
     ########### STEP 1 : Download the file from S3 ###########
@@ -133,20 +133,35 @@ def lambda_handler(event,context):
     if filePath is None:
         # Return None
         return None
-    
+
+    fileExtension = filePath.split(".")[-1]
+
     ########### STEP 2: Get all the pdf pages together ###########
 
-    outFileName = concatUniquePages(listOfPages,filePath)
+    # Case 1: PDf
 
-    print(outFileName)
+    if fileExtension == "pdf":
 
-    ########### STEP 3: Partition the PDF into batches of two pages ###########
+        print("Beginning PDF Processing")
 
-    # Open the file
-    tmpFile = TEMP_DIR 
-    userName = file.split("/")[0]
-    split_pdf(outFileName, tmpFile,userName)
+        outFileName = concatUniquePages(listOfPages,filePath)
 
+        # Step 2a
+        # Open the file
+        tmpFile = TEMP_DIR 
+        userName = file.split("/")[0]
+        split_pdf(outFileName, tmpFile,userName)
+
+        print("PDF Processing Finished")
+
+    else:
+
+        print("Beginning Image Processing")
+
+        outFileName = sendToSQS(file)
+
+        print("Image Processing Finished")
+        
     print("Process Finished")
 
 

@@ -1,7 +1,7 @@
 import boto3
 import json
 
-BUCKET = "xtractor-main"
+BUCKET = "xtractor-main-v2"
 
 s3 = boto3.resource('s3')
 
@@ -64,7 +64,7 @@ def writeResultsToS3(file, results):
         Key=file 
     )
 
-def detectTablesTextract(file):
+def detectTablesTextract(jobID,file):
     """
     This function detects all the tables in an image
     :param file: the file to be processed
@@ -72,31 +72,23 @@ def detectTablesTextract(file):
     # Textract client
     textract = boto3.client('textract')
 
-    # Call textract
-    response = textract.analyze_document(
-        Document={
-            'S3Object': {
-                'Bucket': BUCKET,
-                'Name': file
-            }
-        },
-        FeatureTypes=[
-            'TABLES'
-        ]
+    # Get the response
+    response = textract.get_document_analysis(
+        JobId=jobID
     )
-    
+
     # Write the results to S3 - Cost saving measure
-    fullTextract = file.split("/")[1:].replace(".pdf", "") + "_full_results.json"
+    fullTextract = file.replace(".pdf", "") + "_full_results.json"
     writeResultsToS3(fullTextract, response)
     
     # Get the bounding boxes
     boundingBoxes = getTableBoundingBox(response)
-    boundingBoxesOnly = file.split("/")[1:].replace(".pdf", "") + "_bounding_boxes.json"
+    boundingBoxesOnly = file.replace(".pdf", "") + "_bounding_boxes.json"
     writeResultsToS3(boundingBoxesOnly, boundingBoxes)
 
     # Format the CSV Data
     csvData = get_table_csv_results(response)
-    csvFile = file.split("/")[1:].replace(".pdf", "") + "_csv_results.csv"
+    csvFile = file.replace(".pdf", "") + "_csv_results.csv"
     writeResultsToS3(csvFile, csvData)
 
     # Return the bounding boxes
@@ -191,5 +183,5 @@ def generate_table_csv(table_result, blocks_map, table_index):
     return csv
 
 if __name__ == "__main__":
-    print(detectTablesTextract("jyoun127/example.pdf"))
+    print(detectTablesTextract("jyoun127/702825010004/output_1.pdf"))
 

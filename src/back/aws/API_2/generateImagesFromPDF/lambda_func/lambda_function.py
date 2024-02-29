@@ -12,8 +12,13 @@ def lambda_handler(event, context):
 
     print(event)
 
-    # get the file name
-    file = event["Records"][0]["s3"]["object"]["key"]
+    # get file name from sns
+    file = event['Records'][0]["Sns"]["Message"]
+
+    # Check if its an output 
+    if "output_" in file:
+        print("File is Ignored")
+        return
 
     # get the user name
     userName = file.split("/")[0]

@@ -75,4 +75,3 @@ def lambda_handler(event, context):
     print(output)
     print(type(output))
     return output
-
