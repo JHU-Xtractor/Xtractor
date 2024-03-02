@@ -2,7 +2,9 @@ import boto3
 import json
 
 BUCKET = "xtractor-main-v2"
-DYANMO_DB_TABLE = 'Xtractor_job_file_lookup'
+DYNAMO_DB_TEXTRACT_TABLE = 'Xtractor_job_file_lookup'
+DYNAMO_DB_FILE_TABLE = "xtractor_api_3_lookup_file_uuid"
+
 
 s3 = boto3.resource('s3')
 textract = boto3.client('textract')
@@ -21,7 +23,7 @@ def addEntryToDynamoDB(file, jobId):
     """
     # Add the entry to the DynamoDB table
     response = dynamoDB.put_item(
-        TableName=DYANMO_DB_TABLE,
+        TableName=DYNAMO_DB_TEXTRACT_TABLE,
         Item={
             'file': {
                 'S': file
@@ -37,6 +39,66 @@ def addEntryToDynamoDB(file, jobId):
     
     # Return the response
     return response
+
+def addListOfAssociatedJobsToDynamoDB(uuid,jobID):
+    """
+    This function adds an entry to the DynamoDB table
+    :param file: the file to be added
+    :param jobId: the jobId to be added
+    """
+
+    # First check if there are already existing jobs for a given file 
+    response = dynamoDB.get_item(
+        TableName=DYNAMO_DB_FILE_TABLE,
+        Key={
+            'uuid': {
+                'S': uuid
+            }
+        }
+    )
+
+    if 'job_ids' in response['Item']:
+        # If there are existing jobs, append the new job to the list
+        response = dynamoDB.update_item(
+            TableName=DYNAMO_DB_FILE_TABLE,
+            Key={
+                'uuid': {
+                    'S': uuid
+                }
+            },
+            UpdateExpression="SET job_ids = list_append(job_ids, :i)",
+            ExpressionAttributeValues={
+                ':i': {
+                    'L': [
+                        {
+                            'S': jobID
+                        }
+                    ]
+                }
+            }
+        )
+    else:
+        # If there are no existing jobs, create a new entry
+        response = dynamoDB.update_item(
+            TableName=DYNAMO_DB_FILE_TABLE,
+            Key = {
+                'uuid': {
+                    'S': uuid
+                }
+            },
+            ExpressionAttributeValues={
+                ':i': {
+                    'L': [
+                        {
+                            'S': jobID
+                        }
+                    ]
+                }
+            },
+            UpdateExpression="SET job_ids = :i"
+        )
+    
+   
 
 def beginTextractAsync(file):
     """
@@ -89,13 +151,7 @@ def lambda_handler(event, context):
     file = event['Records'][0]['body']
     receiptHandle = event['Records'][0]['receiptHandle']
 
-    # file must be in the form of output
-    fileLookup = file.split('/')[-1]
-    if "output_" not in fileLookup:
-        return {
-            'statusCode': 400,
-            'body': json.dumps('Invalid file')
-        }
+    print("Creating job for file: ", file)
     
     # Begin the Textract job
     response = beginTextractAsync(file)
@@ -105,6 +161,12 @@ def lambda_handler(event, context):
 
     # Add the entry to the DynamoDB table
     addEntryToDynamoDB(file, jobId)
+
+    # get the uuid associated with the file 
+    fileUUID = file.split("/")[1]
+
+    # Add the job to the list of associated jobs
+    addListOfAssociatedJobsToDynamoDB(fileUUID,jobId)
 
     # Delete
     deleteMessageFromSQS(receiptHandle)

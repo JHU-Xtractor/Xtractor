@@ -22,11 +22,13 @@ def markJobAsCompleted(jobID):
         Key={
             'job_id': jobID
         },
-        UpdateExpression="set status = :s",
-        ExpressionAttributeValues={
-            ':s': "COMPLETED"
+        ExpressionAttributeNames={
+            '#S': 'status'
         },
-        ReturnValues="UPDATED_NEW"
+        ExpressionAttributeValues={
+            ':s': 'COMPLETED'
+        },
+        UpdateExpression='SET #S = :s'
     )
 
 
@@ -75,7 +77,7 @@ def lambda_handler(event, context):
     markJobAsCompleted(jobId)
 
 if __name__ == "__main__":
-    jobID = "e712746f6dee7f2adc78a4d0d15f95f07551cd9f20005d26c9546f0058a32367"
+    jobID = "865a387cdc571503f931dc20bdfde39205a3a542001a5e3fe6802834cdcd65ad"
     mockDict = {
         "Records": [
             {
@@ -83,7 +85,7 @@ if __name__ == "__main__":
                     "Message": json.dumps({
                         "JobId": jobID,
                         "DocumentLocation": {
-                            "S3ObjectName": "jyoun127/9a3acc14-9107-4d23-a555-73ce47e910f8.png"
+                            "S3ObjectName": "jyoun127/a6b13a0a-8507-4041-b6ad-f1aaa382fbe5/output_1.pdf"
                         }
                     })
                 }

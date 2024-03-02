@@ -55,8 +55,8 @@ def testFileDoesNotExist(urlObj):
 if __name__ == "__main__":
     url = "https://7jefwpxjkb.execute-api.us-east-1.amazonaws.com/v3/api_2/job-management"
     urlObj = URL(url)
-    # testPDF(urlObj)
-    testPNG(urlObj)
+    testPDF(urlObj)
+    # testPNG(urlObj)
     # testFileDoesNotExist(urlObj)
 
     print("All tests passed")
