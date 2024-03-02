@@ -2,10 +2,89 @@ import boto3
 import json
 import PyPDF2
 import os
+import uuid
 
 BUCKET = "xtractor-main-v2"
 QUEUE_URL = "https://sqs.us-east-1.amazonaws.com/214775916492/xtractor_process_table.fifo"
 TEMP_DIR = "/tmp"
+DYNAMO_DB_TABLE = "xtractor_api_3_lookup_file_uuid"
+
+# Resources
+s3 = boto3.client('s3')
+s3Resource = boto3.resource('s3')
+dynamodb = boto3.resource('dynamodb')
+
+def addFileToDynamoDB(uuid,file):
+    """
+    This function adds the file to the DynamoDB table
+    :param uuid: the uuid of the file
+    :param file: the file
+    """
+
+    # Add the file to the DynamoDB table
+    table = dynamodb.Table(DYNAMO_DB_TABLE)
+    table.put_item(
+        Item={
+            'uuid': uuid,
+            'file_name': file
+        }
+    )
+
+def createCopyOfFileWithUUIDName(file,uuid):
+    """
+    This function creates a copy of the file with the uuid as the name
+    :param file: the file
+    :param uuid: the uuid
+    """
+
+    s3Client = boto3.client('s3')
+
+    # Get the file from the S3 bucket
+    bucket = s3Client.Bucket(BUCKET)
+    obj = bucket.Object(file)
+    response = obj.get()
+
+    # Get the user
+    user = file.split('/')[0]
+
+    # Get the file extension
+    fileExtension = file.split('.')[-1]
+
+    # Create the new file name
+    newFileName = f"{user}/{uuid}.{fileExtension}"
+
+    # Write the file to the S3 bucket
+    response = bucket.put_object(
+        Body=response['Body'].read(),
+        Key=newFileName
+    )
+
+    return newFileName
+
+def checkIfFileIsUUID(file):
+    """
+    This function checks if the file is a UUID
+    :param file: the file
+    """
+
+    # Split the file Get Actual File
+    fileSplit = file.split('/')
+
+    # Get the last part of the file
+    fileLastPart = fileSplit[-1]
+
+    # Split the file 0 File Extension
+    fileLastPartSplit = fileLastPart.split('.')
+
+    # Get the first part
+    firstPart = fileLastPartSplit[0]
+
+    # Check if the first part is a UUID
+    try:
+        uuid.UUID(firstPart)
+        return True
+    except ValueError:
+        return False
 
 def downloadFromS3(file):
     """
@@ -14,8 +93,6 @@ def downloadFromS3(file):
     """
 
     try:
-        # S3 client
-        s3 = boto3.client('s3')
 
         outputfile = TEMP_DIR + "/" + file.split("/")[-1]
         
@@ -37,16 +114,19 @@ def sendToSQS(message):
     This function sends a message to the SQS queue
     :param message: the message to be sent
     """
+
     # SQS client
     sqs = boto3.client('sqs')
     
     # Send the message
-    sqs.send_message(
+    response = sqs.send_message(
         QueueUrl=QUEUE_URL,
         MessageBody=message,
         MessageGroupId="Xtractor",
         MessageDeduplicationId=message
     )
+
+    print(response)
 
     
 def uploadToS3(file, bucket, objectName):
@@ -109,6 +189,37 @@ def split_pdf(file_path, output_path,userName):
         # # Send to SQS The finished file
         sendToSQS(s3_output)
 
+def createCopyInDirectory(file,uuid):
+
+    # Get the file from the S3 bucket
+    bucket = s3Resource.Bucket(BUCKET)
+    obj = bucket.Object(file)
+    response = obj.get()
+
+    # Get the user
+    user = file.split('/')[0]
+
+    # Get the file extension
+    fileExtension = file.split('.')[-1]
+
+    # Create the new file name
+    newFileName = f"{user}/{uuid}/{uuid}.{fileExtension}"
+
+    # Write the file to the S3 bucket
+    response = bucket.put_object(
+        Body=response['Body'].read(),
+        Key=newFileName
+    )
+
+    # return the image
+    return newFileName
+
+def generateUUID():
+    """
+    This function generates a UUID
+    """
+    return str(uuid.uuid4())
+
 def lambda_handler(event,context):
     """
     This function is the entry point for the AWS Lambda function.
@@ -116,19 +227,37 @@ def lambda_handler(event,context):
     :param context: the context in which the function is running
     """
 
+    print(event)
+
     # Get the file from api gateway
     file = json.loads(event['body'])['file']
-    listOfPages = json.loads(event['body'])['listOfPages']
-    listOfPages = list(map(int, listOfPages))
 
-    # file = "jyoun127/9a3acc14-9107-4d23-a555-73ce47e910f8.png"
-    # listOfPages = [0,1,2,3]
+
+    ########### STEP 0 : Partition to UUIDs ###########
+
+    # Get the user 
+    generatedUUID = generateUUID()
+
+    try:
+        newFileName = createCopyInDirectory(file,generatedUUID)
+    except Exception as e:
+        print(e)
+        return {
+            'statusCode': 500,
+            'body': json.dumps('Error creating copy, no such file')
+        }
+
+    # Add the file to the DynamoDB table
+    addFileToDynamoDB(generatedUUID,file)
+
+    # set the file for uuid use
+    file = newFileName
 
     ########### STEP 1 : Download the file from S3 ###########
 
     # Download the file from S3
     filePath = downloadFromS3(file)
-
+  
     # If the file path is None
     if filePath is None:
         # Return None
@@ -141,9 +270,9 @@ def lambda_handler(event,context):
     # Case 1: PDf
 
     if fileExtension == "pdf":
-
+        listOfPages = json.loads(event['body'])['listOfPages']
+        listOfPages = list(map(int, listOfPages))
         print("Beginning PDF Processing")
-
         outFileName = concatUniquePages(listOfPages,filePath)
 
         # Step 2a
@@ -151,22 +280,28 @@ def lambda_handler(event,context):
         tmpFile = TEMP_DIR 
         userName = file.split("/")[0]
         split_pdf(outFileName, tmpFile,userName)
-
         print("PDF Processing Finished")
 
     else:
 
         print("Beginning Image Processing")
-
-        outFileName = sendToSQS(file)
-
+        newFileName = createCopyInDirectory(file,generatedUUID)
+        outFileName = sendToSQS(newFileName)
         print("Image Processing Finished")
         
     print("Process Finished")
 
+
+    ################### Return Response ###################
+
+    body = {
+        "uuid": generatedUUID,
+        "file": file
+    }
+
     return {
         'statusCode': 200,
-        'body': json.dumps('Process Began')
+        'body': json.dumps(body)
     }
 
 
@@ -174,11 +309,20 @@ def lambda_handler(event,context):
 if __name__ == "__main__":
     
     # Test that concat unique pages works
-    file_path = "702825010010.pdf"
-    pages = [0,1,2,3,4,5]
-    concatUniquePages(pages,file_path)
+    # file_path = "702825010010.pdf"
+    # pages = [0,1,2,3,4,5]
+    # concatUniquePages(pages,file_path)
 
-    # Separate into batches tests
-    file_path = "702825010010_unique.pdf"
-    output_path = "./tmp"
-    split_pdf(file_path, output_path)
+    # # Separate into batches tests
+    # file_path = "702825010010_unique.pdf"
+    # output_path = "./tmp"
+    # split_pdf(file_path, output_path)
+
+    ########### Tests for Images ###########
+    file = "jyoun127/test.png"
+
+
+
+
+
+
