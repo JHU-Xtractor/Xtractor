@@ -14,6 +14,12 @@ s3 = boto3.client('s3')
 s3Resource = boto3.resource('s3')
 dynamodb = boto3.resource('dynamodb')
 
+# Headers
+HEADERS = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Credentials": True
+}
+
 def addFileToDynamoDB(uuid,file):
     """
     This function adds the file to the DynamoDB table
@@ -300,6 +306,7 @@ def lambda_handler(event,context):
     }
 
     return {
+        'headers': HEADERS,
         'statusCode': 200,
         'body': json.dumps(body)
     }

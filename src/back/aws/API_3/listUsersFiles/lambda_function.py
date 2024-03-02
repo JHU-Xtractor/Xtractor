@@ -3,6 +3,10 @@ import json
 s3 = boto3.client('s3')
 BUCKET_NAME = "xtractor-main-v2"
 
+headers = {
+    "Access-Control-Allow-Origin": "*"
+}
+
 def listFiles(user: str) -> list:
     """
     List the files for a user
@@ -38,6 +42,7 @@ def lambda_handler(event, context):
 
     # Return the files
     return {
+        'headers': headers,
         'statusCode': 200,
         'body': json.dumps(files)
     }

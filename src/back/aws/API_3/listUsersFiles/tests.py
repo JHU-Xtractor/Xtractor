@@ -7,7 +7,16 @@ class URL:
         self.url = url
 
     def get(self, body):
-        return requests.get(self.url, body)
+        paramsURL = None
+        for key in body:
+            if paramsURL == None:
+                paramsURL = key + "=" + body[key]
+            else:
+                paramsURL = paramsURL + "&" + key + "=" + body[key]
+        
+        print("hello" , self.url + "?" + paramsURL)
+
+        return requests.get(self.url + "?" + paramsURL)
     
     def post(self, params:dict):
 
@@ -18,6 +27,7 @@ class URL:
             else:
                 paramsURL = paramsURL + "&" + key + "=" + params[key]
         
+
         return requests.post(self.url + "?" + paramsURL)
     
 def testTestUserFiles(urlObj):
