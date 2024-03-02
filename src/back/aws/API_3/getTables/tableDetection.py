@@ -78,7 +78,7 @@ def detectTablesTextract(jobID,file):
     )
 
     # Write the results to S3 - Cost saving measure
-    fullTextract = file.replace(".pdf", "") + "_full_results.json"
+    fullTextract = file.split(".")
     writeResultsToS3(fullTextract, response)
     
     # Get the bounding boxes

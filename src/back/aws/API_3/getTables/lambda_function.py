@@ -8,6 +8,27 @@ textract = boto3.client('textract')
 XTRACTOR_BUCKET = "xtractor-main-v2"
 DYNAMO_DB_TABLE = 'Xtractor_job_file_lookup'
 
+def markJobAsCompleted(jobID):
+    """
+    This function marks the job as completed in the DynamoDB
+    :param jobID: the jobID of the Textract job
+    """
+
+    # Get the DynamoDB table
+    table = dynamodb.Table(DYNAMO_DB_TABLE)
+
+    # Update the item in the table
+    table.update_item(
+        Key={
+            'job_id': jobID
+        },
+        UpdateExpression="set status = :s",
+        ExpressionAttributeValues={
+            ':s': "COMPLETED"
+        },
+        ReturnValues="UPDATED_NEW"
+    )
+
 
 def getJobCorrespondingFile(event):
     """
@@ -49,6 +70,9 @@ def lambda_handler(event, context):
     ################# GET Textract Results #################
 
     tableDetection.detectTablesTextract(jobId, file)
+
+    # mark the job as finished
+    markJobAsCompleted(jobId)
 
 if __name__ == "__main__":
     jobID = "e712746f6dee7f2adc78a4d0d15f95f07551cd9f20005d26c9546f0058a32367"

@@ -28,6 +28,9 @@ def addEntryToDynamoDB(file, jobId):
             },
             'job_id': {
                 'S': jobId
+            },
+            'status': {
+                'S': 'IN_PROGRESS'
             }
         }
     )

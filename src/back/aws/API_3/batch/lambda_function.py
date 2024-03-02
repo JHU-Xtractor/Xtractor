@@ -107,7 +107,7 @@ def split_pdf(file_path, output_path,userName):
         uploadToS3(output_filename, BUCKET, s3_output)
 
         # # Send to SQS The finished file
-        sendToSQS(output_filename.replace(TEMP_DIR + "/", ""))
+        sendToSQS(s3_output)
 
 def lambda_handler(event,context):
     """
@@ -117,12 +117,12 @@ def lambda_handler(event,context):
     """
 
     # Get the file from api gateway
-    # file = json.loads(event['body'])['file']
-    # listOfPages = json.loads(event['body'])['listOfPages']
-    # listOfPages = list(map(int, listOfPages))
+    file = json.loads(event['body'])['file']
+    listOfPages = json.loads(event['body'])['listOfPages']
+    listOfPages = list(map(int, listOfPages))
 
-    file = "jyoun127/9a3acc14-9107-4d23-a555-73ce47e910f8.png"
-    listOfPages = [0,1,2,3]
+    # file = "jyoun127/9a3acc14-9107-4d23-a555-73ce47e910f8.png"
+    # listOfPages = [0,1,2,3]
 
     ########### STEP 1 : Download the file from S3 ###########
 
@@ -163,6 +163,12 @@ def lambda_handler(event,context):
         print("Image Processing Finished")
         
     print("Process Finished")
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Process Began')
+    }
+
 
 
 if __name__ == "__main__":
