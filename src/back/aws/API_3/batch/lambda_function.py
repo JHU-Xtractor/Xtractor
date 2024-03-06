@@ -155,7 +155,7 @@ def uploadToS3(file, bucket, objectName):
         # Print the exception
         print(e)
 
-def concatUniquePages(listOfPages,file_path):
+def concatUniquePages(listOfPages,file_path,userName,uuidName):
     pdf_file = open(file_path, 'rb')
     pdf_reader = PyPDF2.PdfReader(pdf_file)
 
@@ -170,6 +170,11 @@ def concatUniquePages(listOfPages,file_path):
 
     pdf_file.close()
 
+    # upload the result to s3 
+    s3_output = userName + "/" + uuidName + "/" + uuidName + "_unique.pdf"
+    print("Unique s3 upload: " + s3_output)
+    uploadToS3(output_filename, BUCKET, s3_output)
+    
     return output_filename
     
 def split_pdf(file_path, output_path,userName):
@@ -276,15 +281,16 @@ def lambda_handler(event,context):
     # Case 1: PDf
 
     if fileExtension == "pdf":
+        userName = file.split("/")[0]
+
         listOfPages = json.loads(event['body'])['listOfPages']
         listOfPages = list(map(int, listOfPages))
         print("Beginning PDF Processing")
-        outFileName = concatUniquePages(listOfPages,filePath)
+        outFileName = concatUniquePages(listOfPages,filePath,userName,generatedUUID)
 
         # Step 2a
         # Open the file
         tmpFile = TEMP_DIR 
-        userName = file.split("/")[0]
         split_pdf(outFileName, tmpFile,userName)
         print("PDF Processing Finished")
 

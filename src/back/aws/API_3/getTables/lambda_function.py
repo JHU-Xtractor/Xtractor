@@ -38,7 +38,11 @@ def getJobCorrespondingFile(event):
     :param jobID: the jobID of the Textract job
     """
 
-    return json.loads(event['Records'][0]['Sns']['Message'])['DocumentLocation']['S3ObjectName']
+    fileName =  json.loads(event['Records'][0]['Sns']['Message'])['DocumentLocation']['S3ObjectName']
+
+    # remove any file extensions
+    fileName = fileName.split(".")[0]
+    return fileName
 
 
 def getTextractResults(jobID):

@@ -23,7 +23,7 @@ class URL:
 def testFetchJobStatus(urlObj):
 
     parameters =  {
-        'fileUUID': '2086dd8c-18d9-490e-8b01-a226af037b1e'
+        'fileUUID': 'abdb3f4d-6181-4ca4-bc75-7d6e1e98ffd7'
     }
 
     response = urlObj.get(parameters)

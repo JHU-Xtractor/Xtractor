@@ -73,7 +73,15 @@ def lambda_handler(event, context):
     jobIds = getJobIDS(fileUUID)
 
     # Get the job statuses
-    totalJobReport = getJobStatuses(jobIds)
+    totalJobReport = {}
+    try:
+        totalJobReport = getJobStatuses(jobIds)
+    except Exception as e:
+        print(e)
+        return {
+            'statusCode': 200,
+            'body': json.dumps("NOT STARTED")
+        }
 
     return {
         'statusCode': 200,
